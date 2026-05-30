@@ -329,8 +329,11 @@ export default async function Page({
   regionQs.set("service", serviceKey);
   regionQs.set("pref", prefSlug);
 
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3001";
+
   const regionRes = await fetch(
-    `http://localhost:3001/api/v1/facilities/regions?${regionQs.toString()}`,
+    `${baseUrl}/api/v1/facilities/regions?${regionQs.toString()}`,
     { cache: "no-store" }
   ).catch(() => null);
 
