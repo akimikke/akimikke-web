@@ -65,7 +65,7 @@ export function FavoriteFacilitiesClient() {
         const load = async () => {
             setLoading(true);
 
-            const parsed = getFavorites()
+            const parsed = (await getFavorites())
                 .map(parseFavoriteId)
                 .filter(Boolean) as FavoriteItem[];
 
@@ -166,9 +166,30 @@ export function FavoriteFacilitiesClient() {
                     ← 戻る
                 </button>
 
-                <h1 className="favorites-title" style={{ marginTop: 16, fontSize: 36, fontWeight: 800 }}>
-                    お気に入り
-                </h1>
+                <div style={{ marginBottom: 24 }}>
+                    <h1
+                        style={{
+                            fontSize: 36,
+                            fontWeight: 900,
+                            color: "#0f172a",
+                            marginBottom: 10,
+                        }}
+                    >
+                        お気に入り
+                    </h1>
+
+                    <p
+                        style={{
+                            color: "#64748b",
+                            lineHeight: 1.8,
+                            fontSize: 15,
+                        }}
+                    >
+                        保存した施設を一覧で確認できます。
+                        気になる施設の空き状況を比較したり、
+                        詳細ページへすぐ移動できます。
+                    </p>
+                </div>
 
                 {loading ? (
                     <div
@@ -195,33 +216,47 @@ export function FavoriteFacilitiesClient() {
                         まだお気に入りはありません。
                     </div>
                 ) : (
-                    <div style={{ marginTop: 18, display: "grid", gap: 12 }}>
+                    <div style={{ marginTop: 18, display: "grid", gap: 16 }}>
                         {facilities.map((f) => (
-                            <Link
+                            <div
                                 className="favorite-card"
                                 key={`${f.serviceKey}:${f.code}`}
-                                href={`/jp/kanagawa/${f.serviceKey}/${encodeURIComponent(f.code ?? "")}`}
                                 style={{
-                                    textDecoration: "none",
-                                    color: "#111827",
                                     border: "1px solid #e5e7eb",
-                                    borderRadius: 16,
-                                    padding: 18,
+                                    borderRadius: 20,
+                                    padding: 20,
                                     background: "#fff",
-                                    display: "block",
+                                    boxShadow: "0 8px 24px rgba(15, 23, 42, 0.04)",
                                 }}
                             >
-                                <div className="favorite-card-row" style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
-                                    <div>
-                                        <div style={{ fontWeight: 800, fontSize: 20 }}>
-                                            {f.name ?? f.code}
-                                        </div>
-                                        <div style={{ marginTop: 6, color: "#6b7280", fontSize: 14 }}>
+                                <div
+                                    className="favorite-card-row"
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        gap: 16,
+                                        alignItems: "flex-start",
+                                    }}
+                                >
+                                    <div style={{ minWidth: 0 }}>
+                                        <div style={{ color: "#2563eb", fontSize: 13, fontWeight: 800 }}>
                                             {serviceLabel(f.serviceKey)}
                                         </div>
-                                        <div style={{ marginTop: 6, color: "#4b5563" }}>
+
+                                        <h2
+                                            style={{
+                                                margin: "6px 0 0",
+                                                fontWeight: 900,
+                                                fontSize: 22,
+                                                color: "#0f172a",
+                                            }}
+                                        >
+                                            {f.name ?? f.code}
+                                        </h2>
+
+                                        <p style={{ marginTop: 8, color: "#64748b", fontSize: 14 }}>
                                             {f.address ?? ""}
-                                        </div>
+                                        </p>
                                     </div>
 
                                     <div
@@ -234,40 +269,24 @@ export function FavoriteFacilitiesClient() {
                                             gap: 8,
                                         }}
                                     >
-                                        {f.serviceKey === "tk" ? (
-                                            <span
-                                                style={{
-                                                    display: "inline-flex",
-                                                    alignItems: "center",
-                                                    padding: "6px 10px",
-                                                    borderRadius: 999,
-                                                    background: "#ecfdf5",
-                                                    color: "#047857",
-                                                    border: "1px solid #a7f3d0",
-                                                    fontWeight: 800,
-                                                    fontSize: 13,
-                                                }}
-                                            >
-                                                新規引受：{f.acceptTk ?? "不明"}
-                                            </span>
-                                        ) : (
-                                            <span
-                                                style={{
-                                                    display: "inline-flex",
-                                                    alignItems: "center",
-                                                    padding: "6px 10px",
-                                                    borderRadius: 999,
-                                                    background: "#ecfdf5",
-                                                    color: "#047857",
-                                                    border: "1px solid #a7f3d0",
-                                                    fontWeight: 800,
-                                                    fontSize: 13,
-                                                }}
-                                            >
-                                                空き：{f.vacant ?? "不明"}
-                                            </span>
-                                        )}
-                                        {/* ★ここに追加 */}
+                                        <span
+                                            style={{
+                                                display: "inline-flex",
+                                                alignItems: "center",
+                                                padding: "7px 12px",
+                                                borderRadius: 999,
+                                                background: "#ecfdf5",
+                                                color: "#047857",
+                                                border: "1px solid #a7f3d0",
+                                                fontWeight: 900,
+                                                fontSize: 13,
+                                            }}
+                                        >
+                                            {f.serviceKey === "tk"
+                                                ? `新規引受：${f.acceptTk ?? "不明"}`
+                                                : `空き：${f.vacant ?? "不明"}`}
+                                        </span>
+
                                         <button
                                             type="button"
                                             onClick={(e) => {
@@ -275,13 +294,10 @@ export function FavoriteFacilitiesClient() {
                                                 e.stopPropagation();
 
                                                 const id = `${f.serviceKey}:${f.code}`;
-
                                                 removeFavorite(id);
 
                                                 setFacilities((prev) =>
-                                                    prev.filter(
-                                                        (x) => `${x.serviceKey}:${x.code}` !== id
-                                                    )
+                                                    prev.filter((x) => `${x.serviceKey}:${x.code}` !== id)
                                                 );
                                             }}
                                             style={{
@@ -289,21 +305,41 @@ export function FavoriteFacilitiesClient() {
                                                 background: "#fff1f2",
                                                 color: "#be123c",
                                                 borderRadius: 999,
-                                                padding: "6px 10px",
+                                                padding: "7px 12px",
                                                 fontSize: 13,
-                                                fontWeight: 700,
+                                                fontWeight: 800,
                                                 cursor: "pointer",
                                             }}
                                         >
-                                            ♡解除
+                                            ♡ 解除
                                         </button>
                                     </div>
                                 </div>
 
-                                <div style={{ marginTop: 10, color: "#2563eb", fontWeight: 700 }}>
-                                    詳細ページを開く →
+                                <div
+                                    style={{
+                                        marginTop: 16,
+                                        display: "flex",
+                                        gap: 10,
+                                        flexWrap: "wrap",
+                                    }}
+                                >
+                                    <Link
+                                        href={`/jp/kanagawa/${f.serviceKey}/${encodeURIComponent(f.code ?? "")}`}
+                                        style={{
+                                            padding: "10px 14px",
+                                            borderRadius: 12,
+                                            background: "#2563eb",
+                                            color: "#fff",
+                                            fontWeight: 900,
+                                            textDecoration: "none",
+                                            fontSize: 14,
+                                        }}
+                                    >
+                                        詳細ページを開く →
+                                    </Link>
                                 </div>
-                            </Link>
+                            </div>
                         ))}
                     </div>
                 )}

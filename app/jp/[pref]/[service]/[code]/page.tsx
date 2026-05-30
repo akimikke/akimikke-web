@@ -1,6 +1,7 @@
 // app/jp/[pref]/[service]/[code]/page.tsx
 import { notFound } from "next/navigation";
 import { FacilityDetailClient } from "../../../_components/FacilityDetailClient";
+import { SiteHeader } from "@/app/jp/_components/SiteHeader";
 
 export const dynamic = "force-dynamic";
 
@@ -52,11 +53,15 @@ export default async function Page({
   const apiPath = `/api/v1/facilities/detail?${qs.toString()}`;
 
   return (
-    <FacilityDetailClient
-      apiPath={apiPath}
-      prefSlug={prefSlug}
-      serviceKey={serviceKey}
-      initialDisCsv={initialDisCsv}
-    />
+    <>
+      <SiteHeader />
+
+      <FacilityDetailClient
+        apiPath={apiPath}
+        prefSlug={prefSlug}
+        serviceKey={serviceKey}
+        initialDisCsv={initialDisCsv}
+      />
+    </>
   );
 }

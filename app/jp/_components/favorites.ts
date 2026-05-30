@@ -1,39 +1,95 @@
+import { supabase } from "@/app/lib/supabase";
+
 const FAVORITES_KEY = "akimikke:favorites";
 
-export function getFavorites(): string[] {
+export async function getFavorites(): Promise<string[]> {
   if (typeof window === "undefined") return [];
 
-  try {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
     const raw = localStorage.getItem(FAVORITES_KEY);
-    const arr = raw ? JSON.parse(raw) : [];
-    return Array.isArray(arr) ? arr.map(String) : [];
-  } catch {
+    return raw ? JSON.parse(raw) : [];
+  }
+
+  const { data, error } = await supabase
+    .from("favorites")
+    .select("facility_code")
+    .eq("user_id", user.id);
+
+  if (error || !data) {
+    console.error(error);
     return [];
   }
+
+  return data.map((x) => x.facility_code);
 }
 
-export function saveFavorites(ids: string[]) {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(FAVORITES_KEY, JSON.stringify(ids));
+export async function isFavorite(id: string): Promise<boolean> {
+  const favorites = await getFavorites();
+  return favorites.includes(id);
+}
+
+export async function toggleFavorite(
+  facilityId: string,
+  serviceType: string
+) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // 未ログイン時は localStorage
+  if (!user) {
+    const raw = localStorage.getItem(FAVORITES_KEY);
+    const current = raw ? JSON.parse(raw) : [];
+
+    const next = current.includes(facilityId)
+      ? current.filter((x: string) => x !== facilityId)
+      : [...current, facilityId];
+
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
+
+    window.dispatchEvent(new Event("favorites-changed"));
+    return;
+  }
+
+  const { data: existing } = await supabase
+    .from("favorites")
+    .select("id")
+    .eq("user_id", user.id)
+    .eq("facility_code", facilityId)
+    .maybeSingle();
+
+  if (existing) {
+    await supabase
+      .from("favorites")
+      .delete()
+      .eq("id", existing.id);
+  } else {
+    await supabase.from("favorites").insert({
+      user_id: user.id,
+      facility_code: facilityId,
+      service_type: serviceType,
+    });
+  }
+
   window.dispatchEvent(new Event("favorites-changed"));
 }
 
-export function isFavorite(id: string): boolean {
-  return getFavorites().includes(id);
-}
+export async function removeFavorite(id: string) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-export function toggleFavorite(id: string): string[] {
-  const current = getFavorites();
-  const next = current.includes(id)
-    ? current.filter((x) => x !== id)
-    : [...current, id];
+  if (!user) return;
 
-  saveFavorites(next);
-  return next;
-}
+  await supabase
+    .from("favorites")
+    .delete()
+    .eq("user_id", user.id)
+    .eq("facility_code", id);
 
-export function removeFavorite(id: string) {
-  const next = getFavorites().filter((x) => x !== id);
-  saveFavorites(next);
-  return next;
+  window.dispatchEvent(new Event("favorites-changed"));
 }

@@ -3,6 +3,9 @@ import Link from "next/link";
 import { DisabilityFilter } from "../../_components/DisabilityFilter";
 import { FacilityListClient } from "../../_components/FacilityListClient";
 import type { CSSProperties } from "react";
+import { SiteHeader } from "@/app/jp/_components/SiteHeader";
+import { PageContainer } from "@/app/jp/_components/PageContainer";
+import { RegionSelectClient } from "@/app/jp/_components/RegionSelectClient";
 
 const PREF_MAP: Record<string, string> = {
   hokkaido: "北海道",
@@ -65,6 +68,18 @@ const SERVICE_LABEL: Record<string, string> = {
   sn: "障害者支援施設(入所)",
   jn: "児童施設(入所)",
   tk: "計画相談支援",
+};
+
+const SERVICE_DESCRIPTION: Record<string, string> = {
+  gh: "共同生活援助（グループホーム）の空き情報を検索できます。",
+  sk: "生活介護事業所の日中活動・介護支援の空き情報を確認できます。",
+  ab: "就労継続支援A型・B型の空き情報を検索できます。",
+  hd: "放課後等デイサービスの空き情報を確認できます。",
+  jh: "児童発達支援の空き情報を検索できます。",
+  ss: "ショートステイ・日中一時支援の空き情報を確認できます。",
+  sn: "障害者支援施設（入所系）の空き情報を検索できます。",
+  jn: "児童施設（入所系）の空き情報を検索できます。",
+  tk: "計画相談支援事業所の新規受入状況を確認できます。",
 };
 
 const DISABILITY_OPTIONS_BY_SERVICE: Record<string, string[]> = {
@@ -167,14 +182,7 @@ export default async function Page({
 
   if (!prefSlug || !isValidService(serviceKey)) {
     return (
-      <main
-        style={{
-          padding: 24,
-          fontFamily: "system-ui, -apple-system",
-          maxWidth: 1080,
-          margin: "0 auto",
-        }}
-      >
+      <PageContainer>
         <section style={heroStyle}>
           <Link href="/" style={heroLogoLinkStyle}>
             <img src="/akimikke-logo.png" alt="AkiMikke" style={heroLogoImageStyle} />
@@ -210,7 +218,7 @@ export default async function Page({
           pref: {prefSlug}
           {"\n"}service: {serviceKey}
         </pre>
-      </main>
+      </PageContainer>
     );
   }
 
@@ -219,13 +227,14 @@ export default async function Page({
   const disabilityOptions = DISABILITY_OPTIONS_BY_SERVICE[serviceKey] ?? [];
   const isAllPref = prefSlug === "all";
   const pageTitle = isAllPref
-    ? `${serviceLabel} 施設一覧`
+    ? `全国 / ${serviceLabel} 施設一覧`
     : `${prefName} / ${serviceLabel} 施設一覧`;
 
   const dmRaw = Array.isArray(sp.dm) ? sp.dm[0] : sp.dm;
   const disRaw = Array.isArray(sp.dis) ? sp.dis[0] : sp.dis;
   const vacantRaw = Array.isArray(sp.vacant) ? sp.vacant[0] : sp.vacant;
   const cityRaw = Array.isArray(sp.city) ? sp.city[0] : sp.city;
+  const areaPrefRaw = Array.isArray(sp.area_pref) ? sp.area_pref[0] : sp.area_pref;
   const qRaw = Array.isArray(sp.q) ? sp.q[0] : sp.q;
   const orderRaw = Array.isArray(sp.order) ? sp.order[0] : sp.order;
   const shuttleRaw = Array.isArray(sp.f_shuttle) ? sp.f_shuttle[0] : sp.f_shuttle;
@@ -294,6 +303,8 @@ export default async function Page({
   const disCsv = String(disRaw ?? "");
   const onlyVacant = String(vacantRaw ?? "") === "1";
   const city = String(cityRaw ?? "");
+  const areaPref = String(areaPrefRaw ?? "");
+  const effectivePrefForRegions = prefSlug === "all" ? areaPref : prefSlug;
   const q = String(qRaw ?? "");
   const order = String(orderRaw ?? "updated_desc");
   const shuttle = String(shuttleRaw ?? "") === "あり";
@@ -319,14 +330,20 @@ export default async function Page({
   regionQs.set("pref", prefSlug);
 
   const regionRes = await fetch(
-    `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/api/v1/facilities/regions?${regionQs.toString()}`,
+    `http://localhost:3001/api/v1/facilities/regions?${regionQs.toString()}`,
     { cache: "no-store" }
   ).catch(() => null);
 
-  const regionJson = regionRes ? await regionRes.json().catch(() => null) : null;
+  const regionJson = regionRes
+    ? await regionRes.json().catch(() => null)
+    : null;
 
   const regions: string[] = Array.isArray(regionJson?.regions)
     ? regionJson.regions
+    : [];
+
+  const prefectures = Array.isArray(regionJson?.prefectures)
+    ? regionJson.prefectures
     : [];
 
   const hasSearched = !!String(city).trim();
@@ -356,24 +373,8 @@ export default async function Page({
           margin: "0 auto",
         }}
       >
-        <section style={heroStyle}>
-          <div style={heroBadgeStyle}>
-            障害福祉サービスの空き情報検索
-          </div>
+        <SiteHeader />
 
-          <Link href="/" style={heroLogoLinkStyle}>
-            <img
-              src="/akimikke-logo.png"
-              alt="AkiMikke"
-              style={heroLogoImageStyle}
-            />
-            <span style={heroTitleStyle}>AkiMikke</span>
-          </Link>
-
-          <p style={heroLeadStyle}>
-            地域・サービス・条件から、空きのある障害福祉事業所を探せます。
-          </p>
-        </section>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <Link href="/" style={{ color: "#111", textDecoration: "none", fontWeight: 600 }}>
             ← 戻る
@@ -387,6 +388,17 @@ export default async function Page({
         <h1 style={{ marginTop: 16, fontSize: 36, lineHeight: 1.3, fontWeight: 800 }}>
           {pageTitle}
         </h1>
+
+        <p
+          style={{
+            marginTop: 10,
+            color: "#64748b",
+            lineHeight: 1.8,
+            fontSize: 14,
+          }}
+        >
+          {SERVICE_DESCRIPTION[serviceKey] ?? "障害福祉サービスを検索できます。"}
+        </p>
 
         <p style={{ marginTop: 10, color: "#555", fontSize: 15, lineHeight: 1.7 }}>
           都道府県とサービス種別ごとの施設一覧です。障害種別で絞り込みながら、
@@ -421,36 +433,11 @@ export default async function Page({
             <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 12 }}>絞り込み条件</div>
 
             <form method="GET" style={{ display: "grid", gap: 14 }}>
-              <div style={{ display: "grid", gap: 6 }}>
-                <label htmlFor="city" style={{ fontWeight: 700, color: "#111827" }}>
-                  地域
-                </label>
-
-                <select
-                  id="city"
-                  name="city"
-                  required
-                  defaultValue={city}
-                  style={{
-                    width: "100%",
-                    maxWidth: 320,
-                    padding: "10px 12px",
-                    borderRadius: 10,
-                    border: "1px solid #d1d5db",
-                    background: "#fff",
-                    color: "#111827",
-                    fontSize: 14,
-                  }}
-                >
-                  <option value="">地域を選択</option>
-
-                  {regions.map((region) => (
-                    <option key={region} value={region}>
-                      {region}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <RegionSelectClient
+                prefectures={prefectures}
+                initialPref={effectivePrefForRegions}
+                initialCity={city}
+              />
 
               <div style={{ display: "grid", gap: 6 }}>
                 <label htmlFor="q" style={{ fontWeight: 700, color: "#111827" }}>

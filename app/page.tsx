@@ -3,6 +3,7 @@
 
 import Link from "next/link";
 import { useMemo, useState, type CSSProperties } from "react";
+import { AuthHeader } from "./jp/_components/AuthHeader";
 
 type ServiceOption = {
   value: string;
@@ -123,32 +124,35 @@ export default function Home() {
     return `/jp/${encodeURIComponent(pref)}/${encodeURIComponent(service)}${query ? `?${query}` : ""}`;
   }, [pref, service, keyword]);
 
-  const makeListHref = (nextPref: string, nextService: string) => {
-    return `/jp/${encodeURIComponent(nextPref)}/${encodeURIComponent(nextService)}`;
+  const makeListHref = (nextPref: string) => {
+    return `/jp/${encodeURIComponent(nextPref)}`;
   };
 
   return (
     <>
       <style>{`
-  @media (max-width: 900px) {
-    .home-search-row {
-      display: grid !important;
-      grid-template-columns: 1fr !important;
-      gap: 12px !important;
-    }
+        @media (max-width: 900px) {
+          .home-search-row {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+          }
 
-    .home-search-row select,
-    .home-search-row input,
-    .home-search-row button {
-      width: 100% !important;
-      max-width: none !important;
-      min-width: 0 !important;
-      box-sizing: border-box !important;
-    }
-  }
-`}</style>
+          .home-search-row select,
+          .home-search-row input,
+          .home-search-row button {
+            width: 100% !important;
+            max-width: none !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+          }
+        }
+      `}</style>
       <main style={pageStyle}>
         <section style={heroStyle}>
+          <div style={heroAuthStyle}>
+            <AuthHeader />
+          </div>
           <div style={heroBadgeStyle}>障害福祉サービスの空き情報検索</div>
 
           <Link href="/" style={heroLogoLinkStyle}>
@@ -208,7 +212,7 @@ export default function Home() {
                   {group.prefs.map(([value, label]) => (
                     <Link
                       key={value}
-                      href={makeListHref(value, service)}
+                      href={makeListHref(value)}
                       onClick={() => setPref(value)}
                       style={value === pref ? prefButtonActiveStyle : prefButtonStyle}
                     >
@@ -295,6 +299,7 @@ const heroStyle: CSSProperties = {
   background: "linear-gradient(135deg, #e0f2fe 0%, #ffffff 58%, #ecfdf5 100%)",
   border: "1px solid #dbeafe",
   boxShadow: "0 10px 30px rgba(15, 23, 42, 0.06)",
+  position: "relative",
 };
 
 const heroBadgeStyle: CSSProperties = {
@@ -521,4 +526,10 @@ const storeBadgeStyle: CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
+};
+
+const heroAuthStyle: CSSProperties = {
+  position: "absolute",
+  top: 16,
+  right: 20,
 };

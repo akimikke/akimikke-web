@@ -726,25 +726,6 @@ export function FacilityDetailClient(props: {
                 }}
             >
 
-                <section style={heroStyle}>
-                    <div style={heroBadgeStyle}>
-                        障害福祉サービスの空き情報検索
-                    </div>
-                    <Link href="/" style={heroLogoLinkStyle}>
-                        <img
-                            src="/akimikke-logo.png"
-                            alt="AkiMikke"
-                            style={heroLogoImageStyle}
-                        />
-                        <span className="detail-hero-title" style={heroTitleStyle}>
-                            AkiMikke
-                        </span>
-                    </Link>
-                    <p className="detail-hero-lead" style={heroLeadStyle}>
-                        地域・サービス・条件から、利用できる事業所を探せます。
-                    </p>
-                </section>
-
                 <div
                     style={{
                         display: "flex",

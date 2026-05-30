@@ -5,15 +5,20 @@ import { isFavorite, toggleFavorite } from "./favorites";
 
 export function FavoriteButton(props: {
   facilityId: string;
+  serviceType?: string;
   size?: number;
 }) {
-  const { facilityId, size = 26 } = props;
+  const { facilityId, serviceType = "unknown", size = 26 } = props;
   const [fav, setFav] = useState(false);
 
   useEffect(() => {
-    setFav(isFavorite(facilityId));
+    const load = async () => {
+      setFav(await isFavorite(facilityId));
+    };
 
-    const onChange = () => setFav(isFavorite(facilityId));
+    load();
+
+    const onChange = () => load();
     window.addEventListener("favorites-changed", onChange);
 
     return () => {
@@ -26,11 +31,12 @@ export function FavoriteButton(props: {
       type="button"
       aria-label={fav ? "お気に入り解除" : "お気に入り登録"}
       title={fav ? "お気に入り解除" : "お気に入り登録"}
-      onClick={(e) => {
+      onClick={async (e) => {
         e.preventDefault();
         e.stopPropagation();
-        toggleFavorite(facilityId);
-        setFav(isFavorite(facilityId));
+
+        await toggleFavorite(facilityId, serviceType);
+        setFav(await isFavorite(facilityId));
       }}
       style={{
         border: "1px solid #e5e7eb",
