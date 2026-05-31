@@ -33,6 +33,7 @@ function useDb() {
 
 function normalizePref(pref: string) {
   const p = norm(pref).toLowerCase();
+  if (!p) return "";
 
   const map: Record<string, string> = {
     hokkaido: "北海道",
@@ -129,7 +130,8 @@ export async function GET(req: Request) {
 
     // ===== 基本 =====
     const service = norm(sp.get("service")) || "sk"; // DBは小文字想定
-    const prefRaw = norm(sp.get("pref")) || "kanagawa";
+    const areaPrefRaw = norm(sp.get("area_pref"));
+    const prefRaw = areaPrefRaw || norm(sp.get("pref"));
     const prefecture = normalizePref(prefRaw);
     const city = norm(sp.get("city"));
     const onlyVacant = parseBool01(sp.get("vacant"));
@@ -428,7 +430,7 @@ export async function GET(req: Request) {
 
     const upstream = `${gasUrl}?type=${encodeURIComponent(
       service.toLowerCase()
-    )}&pref=${encodeURIComponent(prefRaw)}`;
+    )}`;
 
     const res = await fetch(upstream, { cache: "no-store" });
     if (!res.ok) {
