@@ -113,15 +113,16 @@ export default function Home() {
   const [keyword, setKeyword] = useState("");
 
   const listHref = useMemo(() => {
-    const params = new URLSearchParams();
+    const keywordText = keyword.trim();
 
-    if (keyword.trim()) {
-      params.set("q", keyword.trim());
+    if (keywordText) {
+      const params = new URLSearchParams();
+      params.set("q", keywordText);
+
+      return `/jp/all/${encodeURIComponent(service)}?${params.toString()}`;
     }
 
-    const query = params.toString();
-
-    return `/jp/${encodeURIComponent(pref)}/${encodeURIComponent(service)}${query ? `?${query}` : ""}`;
+    return `/jp/${encodeURIComponent(pref)}/${encodeURIComponent(service)}`;
   }, [pref, service, keyword]);
 
   const makeListHref = (nextPref: string) => {
