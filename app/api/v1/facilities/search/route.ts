@@ -439,20 +439,57 @@ export async function GET(req: Request) {
       );
     }
 
-    const upstream = `${gasUrl}?type=${encodeURIComponent(
-      service.toLowerCase()
-    )}`;
+    const serviceKeys =
+      service === "all"
+        ? ["gh", "sk", "ab", "hd", "jh", "ss", "sn", "jn", "tk"]
+        : [service.toLowerCase()];
 
-    const res = await fetch(upstream, { cache: "no-store" });
-    if (!res.ok) {
-      const text = await res.text();
-      return jsonUtf8(
-        { ok: false, error: text || `Upstream HTTP ${res.status}` },
-        502
-      );
-    }
+    const prefForGas = areaPrefRaw || prefRaw || "";
 
-    const json = await res.json();
+    const upstreams = serviceKeys.map((serviceKey) => {
+      return `${gasUrl}?type=${encodeURIComponent(serviceKey)}&pref=${encodeURIComponent(prefForGas)}`;
+    });
+
+    const gasResults = await Promise.all(
+      upstreams.map(async (upstream) => {
+        const res = await fetch(upstream, { cache: "no-store" });
+
+        if (!res.ok) {
+          return {
+            upstream,
+            ok: false,
+            json: null,
+          };
+        }
+
+        const json = await res.json().catch(() => null);
+
+        return {
+          upstream,
+          ok: true,
+          json,
+        };
+      })
+    );
+
+    const json = {
+      service,
+      serviceLabel: service === "all" ? "全サービス" : "",
+      facilities: gasResults.flatMap((r) => {
+        const j = r.json;
+
+        const rows = Array.isArray(j)
+          ? j
+          : Array.isArray(j?.facilities)
+            ? j.facilities
+            : [];
+
+        return rows.map((f: any) => ({
+          ...f,
+          serviceKey: getAny(f, "serviceKey", "service_key", "serviceType", "service_type") || "",
+        }));
+      }),
+    };
 
     const facilitiesRaw = Array.isArray(json)
       ? json
@@ -634,7 +671,7 @@ export async function GET(req: Request) {
       order: "updated_desc",
       facilities: filtered,
       facets: {},
-      debug: { mode: "gas", upstream, prefecture, city, onlyVacant, q },
+      debug: { mode: "gas", upstreams, prefecture, city, onlyVacant, q },
     });
   } catch (e: any) {
     return jsonUtf8({ ok: false, error: e?.message ?? "Unknown error" }, 500);
