@@ -59,7 +59,7 @@ const PREF_MAP: Record<string, string> = {
 };
 
 const SERVICE_LABEL: Record<string, string> = {
-  all: "全サービス",
+  all: "全国 / 全サービス",
   sk: "生活介護",
   gh: "グループホーム",
   ab: "就労継続A/B",
@@ -230,7 +230,7 @@ export default async function Page({
   const disabilityOptions = DISABILITY_OPTIONS_BY_SERVICE[serviceKey] ?? [];
   const isAllPref = prefSlug === "all";
   const pageTitle = isAllPref
-    ? `全国 / ${serviceLabel} 施設一覧`
+    ? `${serviceLabel} 施設一覧`
     : `${prefName} / ${serviceLabel} 施設一覧`;
 
   const dmRaw = Array.isArray(sp.dm) ? sp.dm[0] : sp.dm;

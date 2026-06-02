@@ -592,23 +592,24 @@ export async function GET(req: Request) {
     }
 
     // フリーワード
-    const qTokens = q
-      .split(/\s+/)
-      .map((x) => x.trim())
-      .filter(Boolean);
+    // フリーワード
+    if (q) {
+      const qTokens = q
+        .split(/\s+/)
+        .map((x) => x.trim())
+        .filter(Boolean);
 
-    if (qTokens.length > 0) {
       filtered = filtered.filter((f: any) => {
-        const hay =
-          `${norm(f.prefecture)} ` +
-          `${norm(f.region)} ` +
-          `${norm(f.address)} ` +
-          `${norm(f.name)} ` +
-          `${norm(f.summary)}`.toLowerCase();
+        const hay = `
+          ${norm(f.name)}
+          ${norm(f.facility_name)}
+          ${norm(f.summary)}
+          ${norm(f.prefecture)}
+          ${norm(f.region)}
+          ${norm(f.address)}
+        `;
 
-        return qTokens.every((token) =>
-          hay.includes(token.toLowerCase())
-        );
+        return qTokens.every((token) => hay.includes(token));
       });
     }
 
