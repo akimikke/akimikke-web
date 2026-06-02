@@ -119,7 +119,7 @@ export default function Home() {
       const params = new URLSearchParams();
       params.set("q", keywordText);
 
-      return `/jp/all/${encodeURIComponent(service)}?${params.toString()}`;
+      return `/jp/all/all?${params.toString()}`;
     }
 
     return `/jp/${encodeURIComponent(pref)}/${encodeURIComponent(service)}`;

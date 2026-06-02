@@ -229,10 +229,12 @@ export default async function Page({
   const serviceLabel = SERVICE_LABEL[serviceKey] ?? serviceKey;
   const disabilityOptions = DISABILITY_OPTIONS_BY_SERVICE[serviceKey] ?? [];
   const isAllPref = prefSlug === "all";
-  const pageTitle = isAllPref
-    ? `${serviceLabel} 施設一覧`
-    : `${prefName} / ${serviceLabel} 施設一覧`;
-
+  const pageTitle =
+    serviceKey === "all"
+      ? "全サービス 施設一覧"
+      : isAllPref
+        ? `全国 / ${serviceLabel} 施設一覧`
+        : `${prefName} / ${serviceLabel} 施設一覧`;
   const dmRaw = Array.isArray(sp.dm) ? sp.dm[0] : sp.dm;
   const disRaw = Array.isArray(sp.dis) ? sp.dis[0] : sp.dis;
   const vacantRaw = Array.isArray(sp.vacant) ? sp.vacant[0] : sp.vacant;
