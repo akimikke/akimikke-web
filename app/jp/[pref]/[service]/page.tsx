@@ -309,6 +309,8 @@ export default async function Page({
   const areaPref = String(areaPrefRaw ?? "");
   const effectivePrefForRegions = prefSlug === "all" ? areaPref : prefSlug;
   const q = String(qRaw ?? "");
+  const isGlobalKeywordSearch = prefSlug === "all" && q.trim() !== "";
+  const effectiveServiceKey = isGlobalKeywordSearch ? "all" : serviceKey;
   const order = String(orderRaw ?? "updated_desc");
   const shuttle = String(shuttleRaw ?? "") === "あり";
   const bath = String(bathRaw ?? "") === "あり";
@@ -317,7 +319,7 @@ export default async function Page({
   const qs = new URLSearchParams();
 
   if (serviceKey !== "all") {
-    qs.set("service", serviceKey);
+    qs.set("service", effectiveServiceKey);
   }
 
   if (!isAllPref) {
@@ -1117,7 +1119,7 @@ export default async function Page({
 
           <div style={{ minWidth: 0 }}>
             {hasSearched ? (
-              <FacilityListClient apiPath={apiPath} prefSlug={prefSlug} serviceKey={serviceKey} />
+              <FacilityListClient apiPath={apiPath} prefSlug={prefSlug} serviceKey={effectiveServiceKey} />
             ) : (
               <section
                 style={{
