@@ -129,7 +129,7 @@ export async function GET(req: Request) {
     const sp = url.searchParams;
 
     // ===== 基本 =====
-    const service = norm(sp.get("service")) || "sk"; // DBは小文字想定
+    const service = norm(sp.get("service")).toLowerCase();
     const areaPrefRaw = norm(sp.get("area_pref"));
     const prefRaw = areaPrefRaw || norm(sp.get("pref"));
     const prefecture = normalizePref(prefRaw);
@@ -214,7 +214,9 @@ export async function GET(req: Request) {
       };
 
       // service_key（必須）
-      add(`service_key = ?`, service);
+      if (service && service !== "all") {
+        add(`LOWER(service_key) = ?`, service.toLowerCase());
+      }
 
       // prefecture
       if (prefecture) add(`prefecture = ?`, prefecture);
@@ -228,13 +230,22 @@ export async function GET(req: Request) {
       }
 
       // q（prefecture/region/address の部分一致）
-      if (q) {
-        add(
-          `(prefecture ILIKE ? OR region ILIKE ? OR address ILIKE ?)`,
-          `%${q}%`,
-          `%${q}%`,
-          `%${q}%`
-        );
+      const qTokens = q
+        .split(/\s+/)
+        .map((x) => x.trim())
+        .filter(Boolean);
+
+      if (qTokens.length > 0) {
+        for (const token of qTokens) {
+          add(
+            `(prefecture ILIKE ? OR region ILIKE ? OR address ILIKE ? OR name ILIKE ? OR summary ILIKE ?)`,
+            `%${token}%`,
+            `%${token}%`,
+            `%${token}%`,
+            `%${token}%`,
+            `%${token}%`
+          );
+        }
       }
 
       // ===== 障害種別（本番向け：text[]）=====
@@ -544,10 +555,23 @@ export async function GET(req: Request) {
     }
 
     // フリーワード
-    if (q) {
+    const qTokens = q
+      .split(/\s+/)
+      .map((x) => x.trim())
+      .filter(Boolean);
+
+    if (qTokens.length > 0) {
       filtered = filtered.filter((f: any) => {
-        const hay = `${norm(f.prefecture)}${norm(f.region)}${norm(f.address)}${norm(f.name)}`;
-        return hay.includes(q);
+        const hay =
+          `${norm(f.prefecture)} ` +
+          `${norm(f.region)} ` +
+          `${norm(f.address)} ` +
+          `${norm(f.name)} ` +
+          `${norm(f.summary)}`.toLowerCase();
+
+        return qTokens.every((token) =>
+          hay.includes(token.toLowerCase())
+        );
       });
     }
 
