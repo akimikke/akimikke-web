@@ -59,6 +59,7 @@ const PREF_MAP: Record<string, string> = {
 };
 
 const SERVICE_LABEL: Record<string, string> = {
+  all: "全サービス",
   sk: "生活介護",
   gh: "グループホーム",
   ab: "就労継続A/B",
@@ -71,6 +72,7 @@ const SERVICE_LABEL: Record<string, string> = {
 };
 
 const SERVICE_DESCRIPTION: Record<string, string> = {
+  all: "全国の障害福祉サービス事業所をフリーワードで検索できます。",
   gh: "共同生活援助（グループホーム）の空き情報を検索できます。",
   sk: "生活介護事業所の日中活動・介護支援の空き情報を確認できます。",
   ab: "就労継続支援A型・B型の空き情報を検索できます。",
@@ -312,7 +314,10 @@ export default async function Page({
   const daysupport = String(daysupportRaw ?? "") === "あり";
 
   const qs = new URLSearchParams();
-  qs.set("service", serviceKey);
+
+  if (serviceKey !== "all") {
+    qs.set("service", serviceKey);
+  }
 
   if (!isAllPref) {
     qs.set("pref", prefSlug);
@@ -349,7 +354,7 @@ export default async function Page({
     ? regionJson.prefectures
     : [];
 
-  const hasSearched = !!String(city).trim();
+  const hasSearched = !!String(city).trim() || !!String(q).trim() || prefSlug === "all";
 
   return (
     <>
