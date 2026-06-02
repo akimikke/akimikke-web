@@ -48,6 +48,12 @@ type Facility = {
     failureJn?: string;
     acceptTk?: string;
     targetsTk?: string;
+    serviceKey?: string;
+    service_key?: string;
+    serviceType?: string;
+    service_type?: string;
+    prefSlug?: string;
+    pref_slug?: string;
 };
 
 type SearchResponse = {
@@ -641,7 +647,21 @@ export function FacilityListClient(props: {
                                 detailQs.set("dis", selectedDisability.join(","));
                             }
 
-                            const href = `/jp/${prefSlug}/${serviceKey}/${encodeURIComponent(code)}${detailQs.toString() ? `?${detailQs.toString()}` : ""
+                            const actualServiceKey = String(
+                                f.serviceKey ??
+                                (f as any).service_key ??
+                                f.serviceType ??
+                                (f as any).service_type ??
+                                serviceKey
+                            ).trim().toLowerCase();
+
+                            const actualPrefSlug = String(
+                                f.prefSlug ??
+                                (f as any).pref_slug ??
+                                prefSlug
+                            ).trim();
+
+                            const href = `/jp/${encodeURIComponent(actualPrefSlug)}/${encodeURIComponent(actualServiceKey)}/${encodeURIComponent(code)}${detailQs.toString() ? `?${detailQs.toString()}` : ""
                                 }`;
 
                             return (
@@ -750,7 +770,7 @@ export function FacilityListClient(props: {
                                                         boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
                                                     }}
                                                 >
-                                                    <FavoriteButton facilityId={`${serviceKey}:${code}`} />
+                                                    <FavoriteButton facilityId={`${actualServiceKey}:${code}`} />
                                                 </div>
                                             </div>
 
@@ -842,7 +862,7 @@ export function FacilityListClient(props: {
                                                             gap: 8,
                                                         }}
                                                     >
-                                                        {renderServiceBadges(serviceKey, f, selectedDisability).map((badge) => (
+                                                        {renderServiceBadges(actualServiceKey, f, selectedDisability).map((badge) => (
                                                             <span
                                                                 key={`${badge.label}:${badge.value}`}
                                                                 style={

@@ -487,6 +487,10 @@ export async function GET(req: Request) {
         return rows.map((f: any) => ({
           ...f,
           serviceKey: getAny(f, "serviceKey", "service_key", "serviceType", "service_type") || "",
+
+          prefSlug: normalizePref(
+            getAny(f, "prefSlug", "pref_slug", "prefecture")
+          ),
         }));
       }),
     };
