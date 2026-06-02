@@ -129,10 +129,10 @@ export async function GET(req: Request) {
     const sp = url.searchParams;
 
     // ===== 基本 =====
-    const service = norm(sp.get("service")).toLowerCase();
+    const service = norm(sp.get("service")).toLowerCase() || "all";
+    const prefRaw = norm(sp.get("pref"));
     const areaPrefRaw = norm(sp.get("area_pref"));
-    const prefRaw = areaPrefRaw || norm(sp.get("pref"));
-    const prefecture = normalizePref(prefRaw);
+    const prefecture = normalizePref(areaPrefRaw || prefRaw);
     const city = norm(sp.get("city"));
     const onlyVacant = parseBool01(sp.get("vacant"));
     const q = norm(sp.get("q"));
