@@ -214,7 +214,7 @@ export async function GET(req: Request) {
       };
 
       // service_key（必須）
-      if (service && service !== "all") {
+      if (service !== "all") {
         add(`LOWER(service_key) = ?`, service.toLowerCase());
       }
 

@@ -85,6 +85,7 @@ const SERVICE_DESCRIPTION: Record<string, string> = {
 };
 
 const DISABILITY_OPTIONS_BY_SERVICE: Record<string, string[]> = {
+  all: [],
   sk: ["知的障害", "精神障害", "身体障害", "高次脳機能障害"],
   gh: ["知的障害", "精神障害", "身体障害", "高次脳機能障害"],
   ab: [],
