@@ -446,11 +446,13 @@ export default async function Page({
             <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 12 }}>絞り込み条件</div>
 
             <form method="GET" style={{ display: "grid", gap: 14 }}>
-              <RegionSelectClient
-                prefectures={prefectures}
-                initialPref={effectivePrefForRegions}
-                initialCity={city}
-              />
+              {serviceKey !== "all" ? (
+                <RegionSelectClient
+                  prefectures={prefectures}
+                  initialPref={effectivePrefForRegions}
+                  initialCity={city}
+                />
+              ) : null}
 
               <div style={{ display: "grid", gap: 6 }}>
                 <label htmlFor="q" style={{ fontWeight: 700, color: "#111827" }}>
