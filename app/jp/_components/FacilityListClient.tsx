@@ -146,6 +146,18 @@ function pick(...values: any[]) {
     }
     return "";
 }
+const SERVICE_LABELS: Record<string, string> = {
+    gh: "グループホーム",
+    sk: "生活介護",
+    ab: "就労継続A/B型",
+    hd: "放課後等デイサービス",
+    jh: "児童発達支援",
+    ss: "ショートステイ",
+    sn: "障害者支援施設",
+    jn: "児童施設",
+    tk: "計画相談支援",
+    all: "全サービス",
+};
 
 function displayOrUnknown(...values: any[]) {
     return pick(...values) || "不明";
@@ -655,6 +667,8 @@ export function FacilityListClient(props: {
                                 serviceKey
                             ).trim().toLowerCase();
 
+                            const actualServiceLabel = SERVICE_LABELS[actualServiceKey] ?? actualServiceKey.toUpperCase();
+
                             const actualPrefSlug = String(
                                 f.prefSlug ??
                                 (f as any).pref_slug ??
@@ -795,6 +809,21 @@ export function FacilityListClient(props: {
                                                         }}
                                                     >
                                                         <div style={{ flex: 1, minWidth: 0 }}>
+                                                            <div
+                                                                style={{
+                                                                    display: "inline-flex",
+                                                                    marginBottom: 8,
+                                                                    padding: "5px 10px",
+                                                                    borderRadius: 999,
+                                                                    background: "#eef2ff",
+                                                                    color: "#3730a3",
+                                                                    border: "1px solid #c7d2fe",
+                                                                    fontSize: 12,
+                                                                    fontWeight: 800,
+                                                                }}
+                                                            >
+                                                                {actualServiceLabel}
+                                                            </div>
                                                             <div
                                                                 style={{
                                                                     fontSize: 28,
