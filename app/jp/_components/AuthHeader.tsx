@@ -35,7 +35,7 @@ export function AuthHeader() {
                 </Link>
                 <span style={loginTextStyle}>ログイン中</span>
                 <button type="button" onClick={logout} style={logoutButtonStyle}>
-                    ログアウトする
+                    ログアウト
                 </button>
             </div>
         );
@@ -60,7 +60,9 @@ const wrapStyle: React.CSSProperties = {
     display: "flex",
     justifyContent: "flex-end",
     alignItems: "center",
-    gap: 10,
+    gap: 8,
+    flexWrap: "nowrap",
+    whiteSpace: "nowrap",
 };
 
 const loginTextStyle: React.CSSProperties = {
@@ -70,14 +72,16 @@ const loginTextStyle: React.CSSProperties = {
 };
 
 const linkStyle: React.CSSProperties = {
-    padding: "8px 12px",
+    padding: "8px 10px",
     borderRadius: 999,
     border: "1px solid #d1d5db",
     color: "#334155",
     textDecoration: "none",
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 700,
     background: "#fff",
+    whiteSpace: "nowrap",
+    lineHeight: 1,
 };
 
 const primaryLinkStyle: React.CSSProperties = {
