@@ -194,6 +194,9 @@ export default function Home() {
             <Link href={listHref} style={searchButtonStyle}>
               検索する
             </Link>
+            <Link href="/jp/favorites" style={favoriteTopButtonStyle}>
+              お気に入り
+            </Link>
           </div>
         </section>
 
@@ -345,7 +348,7 @@ const heroLeadStyle: CSSProperties = {
 const searchPanelStyle: CSSProperties = {
   marginTop: 20,
   display: "grid",
-  gridTemplateColumns: "1fr 1fr 2fr auto",
+  gridTemplateColumns: "1fr 1fr 2fr auto auto",
   gap: 10,
 };
 
@@ -533,4 +536,15 @@ const heroAuthStyle: CSSProperties = {
   display: "flex",
   justifyContent: "flex-end",
   marginBottom: 12,
+};
+
+const favoriteTopButtonStyle: CSSProperties = {
+  padding: "12px 18px",
+  borderRadius: 12,
+  background: "#fff",
+  color: "#334155",
+  fontWeight: 900,
+  textDecoration: "none",
+  textAlign: "center",
+  border: "1px solid #d1d5db",
 };

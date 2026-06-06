@@ -30,9 +30,6 @@ export function AuthHeader() {
     if (email) {
         return (
             <div style={wrapStyle}>
-                <Link href="/jp/favorites" style={linkStyle}>
-                    お気に入り
-                </Link>
                 <span style={loginTextStyle}>ログイン中</span>
                 <button type="button" onClick={logout} style={logoutButtonStyle}>
                     ログアウト
@@ -43,9 +40,6 @@ export function AuthHeader() {
 
     return (
         <div style={wrapStyle}>
-            <Link href="/jp/favorites" style={linkStyle}>
-                お気に入り
-            </Link>
             <Link href="/jp/login" style={linkStyle}>
                 ログイン
             </Link>
@@ -58,10 +52,10 @@ export function AuthHeader() {
 
 const wrapStyle: React.CSSProperties = {
     display: "flex",
-    flexDirection: "column-reverse",
-    justifyContent: "flex-start",
-    alignItems: "flex-end",
-    gap: 6,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    gap: 8,
+    flexWrap: "wrap",
 };
 
 const loginTextStyle: React.CSSProperties = {

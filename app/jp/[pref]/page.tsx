@@ -119,7 +119,7 @@ export default async function PrefPage({
         <PageContainer>
             <SiteHeader />
 
-            <div style={{ marginTop: 20 }}>
+            <div style={{ marginTop: 20, display: "flex", alignItems: "center", gap: 12 }}>
                 <Link
                     href="/"
                     style={{
@@ -129,6 +129,17 @@ export default async function PrefPage({
                     }}
                 >
                     ← ホームへ戻る
+                </Link>
+
+                <Link
+                    href="/jp/favorites"
+                    style={{
+                        color: "#111827",
+                        textDecoration: "none",
+                        fontWeight: 700,
+                    }}
+                >
+                    お気に入り
                 </Link>
             </div>
 
