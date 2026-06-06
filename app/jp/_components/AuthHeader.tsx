@@ -58,21 +58,21 @@ export function AuthHeader() {
 
 const wrapStyle: React.CSSProperties = {
     display: "flex",
-    justifyContent: "flex-end",
-    alignItems: "center",
-    gap: 8,
-    flexWrap: "nowrap",
-    whiteSpace: "nowrap",
+    flexDirection: "column-reverse",
+    justifyContent: "flex-start",
+    alignItems: "flex-end",
+    gap: 6,
 };
 
 const loginTextStyle: React.CSSProperties = {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 800,
     color: "#0f172a",
+    whiteSpace: "nowrap",
 };
 
 const linkStyle: React.CSSProperties = {
-    padding: "8px 10px",
+    padding: "7px 11px",
     borderRadius: 999,
     border: "1px solid #d1d5db",
     color: "#334155",
@@ -81,7 +81,6 @@ const linkStyle: React.CSSProperties = {
     fontWeight: 700,
     background: "#fff",
     whiteSpace: "nowrap",
-    lineHeight: 1,
 };
 
 const primaryLinkStyle: React.CSSProperties = {

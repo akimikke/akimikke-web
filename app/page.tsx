@@ -296,7 +296,7 @@ const heroStyle: CSSProperties = {
   maxWidth: 1120,
   margin: "0 auto",
   borderRadius: 24,
-  padding: "28px 24px",
+  padding: "18px 24px 24px",
   background: "linear-gradient(135deg, #e0f2fe 0%, #ffffff 58%, #ecfdf5 100%)",
   border: "1px solid #dbeafe",
   boxShadow: "0 10px 30px rgba(15, 23, 42, 0.06)",

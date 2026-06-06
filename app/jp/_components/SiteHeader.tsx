@@ -17,17 +17,13 @@ export function SiteHeader() {
 const headerStyle: React.CSSProperties = {
     maxWidth: 1120,
     margin: "0 auto 18px",
-    padding: "18px 20px",
+    padding: "14px 16px",
     borderRadius: 20,
     background: "linear-gradient(135deg, #e0f2fe 0%, #ffffff 60%, #ecfdf5 100%)",
     border: "1px solid #dbeafe",
-
     display: "flex",
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "space-between",
-
-    flexWrap: "wrap",
-
     gap: 12,
 };
 
