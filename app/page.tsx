@@ -530,7 +530,7 @@ const storeBadgeStyle: CSSProperties = {
 };
 
 const heroAuthStyle: CSSProperties = {
-  position: "absolute",
-  top: 16,
-  right: 20,
+  display: "flex",
+  justifyContent: "flex-end",
+  marginBottom: 12,
 };
