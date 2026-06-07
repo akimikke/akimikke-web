@@ -163,6 +163,16 @@ function displayOrUnknown(...values: any[]) {
     return pick(...values) || "不明";
 }
 
+function formatDateOnly(value: any) {
+    const s = String(value ?? "").trim();
+    if (!s) return "";
+
+    const d = new Date(s);
+    if (Number.isNaN(d.getTime())) return s;
+
+    return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+}
+
 function normalizeDriveImageUrl(url: string) {
     const s = String(url ?? "").trim();
     if (!s) return "";
@@ -698,7 +708,7 @@ export function FacilityListClient(props: {
                                             className="facility-card-layout"
                                             style={{
                                                 display: "grid",
-                                                gridTemplateColumns: "220px 1fr",
+                                                gridTemplateColumns: "180px 1fr",
                                                 gap: 0,
                                             }}
                                         >
@@ -829,7 +839,10 @@ export function FacilityListClient(props: {
                                                             </div>
                                                             <div
                                                                 style={{
-                                                                    fontSize: 28,
+                                                                    fontSize: 24,
+                                                                    whiteSpace: "nowrap",
+                                                                    overflow: "hidden",
+                                                                    textOverflow: "ellipsis",
                                                                     fontWeight: 900,
                                                                     color: "#111827",
                                                                     lineHeight: 1.4,
@@ -867,23 +880,6 @@ export function FacilityListClient(props: {
                                                             )}
                                                         </div>
                                                     </div>
-
-                                                    {/* 概要 */}
-                                                    {f.summary ? (
-                                                        <div
-                                                            style={{
-                                                                marginTop: 14,
-                                                                color: "#374151",
-                                                                lineHeight: 1.8,
-                                                                display: "-webkit-box",
-                                                                WebkitLineClamp: 2,
-                                                                WebkitBoxOrient: "vertical" as any,
-                                                                overflow: "hidden",
-                                                            }}
-                                                        >
-                                                            {f.summary}
-                                                        </div>
-                                                    ) : null}
 
                                                     {/* タグ */}
                                                     <div
@@ -937,7 +933,7 @@ export function FacilityListClient(props: {
                                                         }}
                                                     >
                                                         {f.vacantUpdatedAt
-                                                            ? `更新：${String(f.vacantUpdatedAt)}`
+                                                            ? `更新：${formatDateOnly(f.vacantUpdatedAt)}`
                                                             : ""}
                                                     </div>
 
