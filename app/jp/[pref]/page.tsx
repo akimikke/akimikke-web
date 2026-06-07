@@ -117,6 +117,17 @@ export default async function PrefPage({
 
     return (
         <PageContainer>
+            <style>{`
+              .mobileBreak {
+                display: inline;
+              }
+              @media (max-width: 600px) {
+                .mobileBreak {
+                  display: block;
+                }
+              }
+            `}</style>
+
             <SiteHeader />
 
             <div style={{ marginTop: 20, display: "flex", alignItems: "center", gap: 12 }}>
@@ -149,7 +160,10 @@ export default async function PrefPage({
                 </div>
 
                 <h1 style={heroTitleStyle}>
-                    {prefName} の障害福祉サービス
+                    {prefName}の
+                    <span className="mobileBreak">
+                        障害福祉サービス
+                    </span>
                 </h1>
 
                 <p style={heroLeadStyle}>
