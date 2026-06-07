@@ -55,23 +55,24 @@ const wrapStyle: React.CSSProperties = {
     justifyContent: "flex-end",
     alignItems: "center",
     gap: 8,
-    flexWrap: "wrap",
+    flexWrap: "nowrap",
+    whiteSpace: "nowrap",
 };
 
 const loginTextStyle: React.CSSProperties = {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: 800,
     color: "#0f172a",
     whiteSpace: "nowrap",
 };
 
 const linkStyle: React.CSSProperties = {
-    padding: "7px 11px",
+    padding: "8px 12px",
     borderRadius: 999,
     border: "1px solid #d1d5db",
     color: "#334155",
     textDecoration: "none",
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: 700,
     background: "#fff",
     whiteSpace: "nowrap",

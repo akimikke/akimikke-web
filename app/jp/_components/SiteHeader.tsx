@@ -17,14 +17,15 @@ export function SiteHeader() {
 const headerStyle: React.CSSProperties = {
     maxWidth: 1120,
     margin: "0 auto 18px",
-    padding: "14px 16px",
+    padding: "16px 20px",
     borderRadius: 20,
     background: "linear-gradient(135deg, #e0f2fe 0%, #ffffff 60%, #ecfdf5 100%)",
     border: "1px solid #dbeafe",
     display: "flex",
-    alignItems: "flex-start",
+    alignItems: "center",
     justifyContent: "space-between",
     gap: 12,
+    minHeight: 72,
 };
 
 const logoLinkStyle: React.CSSProperties = {
