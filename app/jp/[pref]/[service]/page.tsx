@@ -382,7 +382,7 @@ export default async function Page({
         style={{
           padding: 24,
           fontFamily: "system-ui, -apple-system",
-          maxWidth: 1680,
+          maxWidth: 1120,
           margin: "0 auto",
         }}
       >
