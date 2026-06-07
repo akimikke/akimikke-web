@@ -423,8 +423,8 @@ export default async function Page({
           style={{
             marginTop: 20,
             display: "grid",
-            gridTemplateColumns: "520px minmax(0, 1fr)",
-            gap: 24,
+            gridTemplateColumns: "280px minmax(0, 1fr)",
+            gap: 20,
             alignItems: "start",
           }}
         >
