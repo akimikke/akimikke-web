@@ -248,13 +248,13 @@ function optionBadgeStyle(value: string | undefined): React.CSSProperties {
         return {
             display: "inline-flex",
             alignItems: "center",
-            padding: "4px 8px",
+            padding: "3px 7px",
             borderRadius: 999,
             background: "#eff6ff",
             color: "#1d4ed8",
             border: "1px solid #bfdbfe",
             fontWeight: 700,
-            fontSize: 12,
+            fontSize: 11,
         };
     }
 
@@ -267,7 +267,7 @@ function optionBadgeStyle(value: string | undefined): React.CSSProperties {
         color: "#6b7280",
         border: "1px solid #e5e7eb",
         fontWeight: 700,
-        fontSize: 12,
+        fontSize: 11,
     };
 }
 
@@ -581,7 +581,7 @@ export function FacilityListClient(props: {
                                 borderRadius: 999,
                                 background: "#eff6ff",
                                 color: "#1d4ed8",
-                                fontSize: 12,
+                                fontSize: 11,
                                 fontWeight: 700,
                                 border: "1px solid #bfdbfe",
                             }}
@@ -595,7 +595,7 @@ export function FacilityListClient(props: {
                                 borderRadius: 999,
                                 background: "#f0fdf4",
                                 color: "#166534",
-                                fontSize: 12,
+                                fontSize: 11,
                                 fontWeight: 700,
                                 border: "1px solid #86efac",
                             }}
@@ -611,7 +611,7 @@ export function FacilityListClient(props: {
                                     borderRadius: 999,
                                     background: "#f9fafb",
                                     color: "#374151",
-                                    fontSize: 12,
+                                    fontSize: 11,
                                     fontWeight: 700,
                                     border: "1px solid #e5e7eb",
                                 }}
@@ -831,7 +831,7 @@ export function FacilityListClient(props: {
                                                                     background: "#eef2ff",
                                                                     color: "#3730a3",
                                                                     border: "1px solid #c7d2fe",
-                                                                    fontSize: 12,
+                                                                    fontSize: 11,
                                                                     fontWeight: 800,
                                                                 }}
                                                             >
@@ -839,13 +839,13 @@ export function FacilityListClient(props: {
                                                             </div>
                                                             <div
                                                                 style={{
-                                                                    fontSize: 24,
+                                                                    fontSize: 18,
                                                                     whiteSpace: "nowrap",
                                                                     overflow: "hidden",
                                                                     textOverflow: "ellipsis",
-                                                                    fontWeight: 900,
+                                                                    fontWeight: 800,
                                                                     color: "#111827",
-                                                                    lineHeight: 1.4,
+                                                                    lineHeight: 1.2,
                                                                 }}
                                                             >
                                                                 {f.name || "名称未設定"}
@@ -853,10 +853,12 @@ export function FacilityListClient(props: {
 
                                                             <div
                                                                 style={{
-                                                                    marginTop: 8,
+                                                                    marginTop: 4,
                                                                     color: "#4b5563",
-                                                                    fontSize: 15,
-                                                                    lineHeight: 1.8,
+                                                                    fontSize: 13,
+                                                                    whiteSpace: "nowrap",
+                                                                    overflow: "hidden",
+                                                                    textOverflow: "ellipsis",
                                                                 }}
                                                             >
                                                                 {f.address ?? ""}
@@ -898,13 +900,13 @@ export function FacilityListClient(props: {
                                                                         ? {
                                                                             display: "inline-flex",
                                                                             alignItems: "center",
-                                                                            padding: "4px 8px",
+                                                                            padding: "3px 7px",
                                                                             borderRadius: 999,
                                                                             background: "#f0fdf4",
                                                                             color: "#166534",
                                                                             border: "1px solid #86efac",
                                                                             fontWeight: 800,
-                                                                            fontSize: 12,
+                                                                            fontSize: 11,
                                                                         }
                                                                         : optionBadgeStyle(badge.value)
                                                                 }
@@ -929,7 +931,7 @@ export function FacilityListClient(props: {
                                                     <div
                                                         style={{
                                                             color: "#6b7280",
-                                                            fontSize: 13,
+                                                            fontSize: 12,
                                                         }}
                                                     >
                                                         {f.vacantUpdatedAt
