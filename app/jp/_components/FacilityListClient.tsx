@@ -698,7 +698,7 @@ export function FacilityListClient(props: {
                                             className="facility-card-layout"
                                             style={{
                                                 display: "grid",
-                                                gridTemplateColumns: "320px 1fr",
+                                                gridTemplateColumns: "220px 1fr",
                                                 gap: 0,
                                             }}
                                         >
@@ -708,7 +708,8 @@ export function FacilityListClient(props: {
                                                 style={{
                                                     position: "relative",
                                                     background: "#f3f4f6",
-                                                    minHeight: 220,
+                                                    minHeight: 150,
+                                                    height: 150,
                                                 }}
                                             >
                                                 {(() => {
@@ -742,8 +743,9 @@ export function FacilityListClient(props: {
                                                                 display: "block",
                                                                 width: "100%",
                                                                 height: "100%",
-                                                                minHeight: 220,
-                                                                objectFit: "cover",
+                                                                minHeight: 150,
+                                                                objectFit: "contain",
+                                                                background: "#f8fafc",
                                                             }}
                                                         />
                                                     ) : (
@@ -751,7 +753,7 @@ export function FacilityListClient(props: {
                                                             style={{
                                                                 width: "100%",
                                                                 height: "100%",
-                                                                minHeight: 220,
+                                                                minHeight: 150,
                                                                 display: "flex",
                                                                 alignItems: "center",
                                                                 justifyContent: "center",
@@ -765,6 +767,7 @@ export function FacilityListClient(props: {
                                                                     width: 96,
                                                                     height: 96,
                                                                     objectFit: "contain",
+                                                                    background: "#f8fafc",
                                                                     opacity: 0.75,
                                                                 }}
                                                             />
