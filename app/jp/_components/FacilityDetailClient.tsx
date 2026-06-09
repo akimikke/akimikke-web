@@ -329,6 +329,43 @@ function SsAvailabilityCalendar({ days }: { days: SsAvailabilityDay[] }) {
     );
 }
 
+function CollapsibleText({ text }: { text: string }) {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <div>
+            <div
+                style={{
+                    display: open ? "block" : "-webkit-box",
+                    WebkitLineClamp: open ? "unset" : 3,
+                    WebkitBoxOrient: "vertical" as any,
+                    overflow: "hidden",
+                    color: "#374151",
+                    lineHeight: 1.8,
+                }}
+            >
+                {text}
+            </div>
+
+            <button
+                type="button"
+                onClick={() => setOpen(!open)}
+                style={{
+                    marginTop: 8,
+                    border: "none",
+                    background: "transparent",
+                    color: "#2563eb",
+                    fontWeight: 800,
+                    cursor: "pointer",
+                    padding: 0,
+                }}
+            >
+                {open ? "閉じる" : "続きを読む"}
+            </button>
+        </div>
+    );
+}
+
 const heroStyle: React.CSSProperties = {
     marginBottom: 24,
     borderRadius: 24,
@@ -428,7 +465,7 @@ export function FacilityDetailClient(props: {
                 style={{
                     padding: 24,
                     fontFamily: "system-ui, -apple-system",
-                    maxWidth: 980,
+                    maxWidth: 1120,
                     margin: "0 auto",
                 }}
             >
@@ -453,7 +490,7 @@ export function FacilityDetailClient(props: {
                 style={{
                     padding: 24,
                     fontFamily: "system-ui, -apple-system",
-                    maxWidth: 980,
+                    maxWidth: 1040,
                     margin: "0 auto",
                 }}
             >
@@ -516,16 +553,18 @@ export function FacilityDetailClient(props: {
                       flex-wrap: wrap !important;
                     }
 
-                    .detail-image-grid {
+                    .detail-image-grid,
+                    .detail-action-grid {
                       grid-template-columns: 1fr !important;
                     }
 
                     .detail-info-grid {
-                      grid-template-columns: 1fr !important;
+                      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                      gap: 10px !important;
                     }
 
-                    .detail-action-grid {
-                      grid-template-columns: 1fr !important;
+                    .detail-info-grid > div {
+                      padding: 12px !important;
                     }
 
                     .detail-ss-grid {
@@ -543,7 +582,7 @@ export function FacilityDetailClient(props: {
                     style={{
                         padding: 24,
                         fontFamily: "system-ui, -apple-system",
-                        maxWidth: 980,
+                        maxWidth: 1040,
                         margin: "0 auto",
                     }}
                 >
@@ -705,13 +744,21 @@ export function FacilityDetailClient(props: {
                 }
 
                 .detail-image-grid,
-                .detail-info-grid,
                 .detail-action-grid {
                   grid-template-columns: 1fr !important;
                 }
 
                 .detail-ss-grid {
                   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                }
+
+                .detail-info-grid {
+                  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                  gap: 10px !important;
+                }
+
+                .detail-info-grid > div {
+                  padding: 12px !important;
                 }
               }
             `}</style>
@@ -721,7 +768,7 @@ export function FacilityDetailClient(props: {
                 style={{
                     padding: 24,
                     fontFamily: "system-ui, -apple-system",
-                    maxWidth: 980,
+                    maxWidth: 1040,
                     margin: "0 auto",
                 }}
             >
@@ -865,6 +912,7 @@ export function FacilityDetailClient(props: {
 
                     {serviceKey === "sk" ? (
                         <div
+                            className="detail-info-grid"
                             style={{
                                 marginTop: 18,
                                 display: "grid",
@@ -934,6 +982,7 @@ export function FacilityDetailClient(props: {
 
                     {serviceKey === "gh" ? (
                         <div
+                            className="detail-info-grid"
                             style={{
                                 marginTop: 18,
                                 display: "grid",
@@ -1001,6 +1050,7 @@ export function FacilityDetailClient(props: {
 
                     {serviceKey === "ab" ? (
                         <div
+                            className="detail-info-grid"
                             style={{
                                 marginTop: 18,
                                 display: "grid",
@@ -1040,6 +1090,7 @@ export function FacilityDetailClient(props: {
 
                     {serviceKey === "hd" ? (
                         <div
+                            className="detail-info-grid"
                             style={{
                                 marginTop: 18,
                                 display: "grid",
@@ -1107,6 +1158,7 @@ export function FacilityDetailClient(props: {
 
                     {serviceKey === "jh" ? (
                         <div
+                            className="detail-info-grid"
                             style={{
                                 marginTop: 18,
                                 display: "grid",
@@ -1160,6 +1212,7 @@ export function FacilityDetailClient(props: {
 
                     {serviceKey === "ss" ? (
                         <div
+                            className="detail-info-grid"
                             style={{
                                 marginTop: 18,
                                 display: "grid",
@@ -1213,6 +1266,7 @@ export function FacilityDetailClient(props: {
 
                     {serviceKey === "sn" ? (
                         <div
+                            className="detail-info-grid"
                             style={{
                                 marginTop: 18,
                                 display: "grid",
@@ -1252,6 +1306,7 @@ export function FacilityDetailClient(props: {
 
                     {serviceKey === "jn" ? (
                         <div
+                            className="detail-info-grid"
                             style={{
                                 marginTop: 18,
                                 display: "grid",
@@ -1291,6 +1346,7 @@ export function FacilityDetailClient(props: {
 
                     {serviceKey === "tk" ? (
                         <div
+                            className="detail-info-grid"
                             style={{
                                 marginTop: 18,
                                 display: "grid",
@@ -1378,7 +1434,7 @@ export function FacilityDetailClient(props: {
                             }}
                         >
                             <div style={{ fontWeight: 800, marginBottom: 8, color: "#111827" }}>概要</div>
-                            <div>{facility.summary}</div>
+                            <CollapsibleText text={facility.summary} />
                         </div>
                     ) : null}
 
@@ -1429,7 +1485,7 @@ export function FacilityDetailClient(props: {
                                     }}
                                 >
                                     <div style={{ fontWeight: 800, color: "#111827", marginBottom: 8 }}>特徴</div>
-                                    <div style={{ color: "#374151", lineHeight: 1.8 }}>{facility.appeal}</div>
+                                    <CollapsibleText text={facility.appeal} />
                                 </div>
                             ) : null}
                             {serviceKey === "ss" && Array.isArray((facility as any).availability) && (facility as any).availability.length > 0 ? (
