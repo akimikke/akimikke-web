@@ -254,6 +254,16 @@ function normalizeDriveImageUrl(url: string) {
     return `https://lh3.googleusercontent.com/d/${id}=w1000`;
 }
 
+function formatDateOnly(value: any) {
+    const s = String(value ?? "").trim();
+    if (!s) return "";
+
+    const d = new Date(s);
+    if (Number.isNaN(d.getTime())) return s;
+
+    return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+}
+
 function normalizeSsAvailability(raw: any): SsAvailabilityDay[] {
     if (!Array.isArray(raw)) return [];
 
@@ -892,21 +902,9 @@ export function FacilityDetailClient(props: {
                         </div>
                     ) : null}
 
-                    {facilityDaySupport !== "不明" ? (
-                        <div
-                            style={{
-                                marginTop: 14,
-                                color: "#374151",
-                                fontWeight: 600,
-                            }}
-                        >
-                            日中一時支援：{facilityDaySupport}
-                        </div>
-                    ) : null}
-
                     {facility.vacantUpdatedAt ? (
                         <div style={{ marginTop: 14, color: "#6b7280", fontSize: 13 }}>
-                            更新：{String(facility.vacantUpdatedAt)}
+                            更新：{formatDateOnly(facility.vacantUpdatedAt)}
                         </div>
                     ) : null}
 
