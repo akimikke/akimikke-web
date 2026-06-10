@@ -17,6 +17,12 @@ type Facility = {
         note?: string;
     }[];
     vacantUpdatedAt?: string;
+    updatedAt?: string;
+    updated_at?: string;
+    lastUpdatedAt?: string;
+    last_updated_at?: string;
+    modifiedAt?: string;
+    modified_at?: string;
     summary?: string;
     appeal?: string;
     images?: string[] | string;
@@ -171,6 +177,22 @@ function formatDateOnly(value: any) {
     if (Number.isNaN(d.getTime())) return s;
 
     return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
+}
+
+function getFacilityUpdatedDate(f: Facility) {
+    return formatDateOnly(
+        pick(
+            f.vacantUpdatedAt,
+            (f as any).updatedAt,
+            (f as any).updated_at,
+            (f as any).lastUpdatedAt,
+            (f as any).last_updated_at,
+            (f as any).modifiedAt,
+            (f as any).modified_at,
+            (f as any).updated,
+            (f as any).lastUpdate
+        )
+    );
 }
 
 function normalizeDriveImageUrl(url: string) {
@@ -934,8 +956,8 @@ export function FacilityListClient(props: {
                                                             fontSize: 12,
                                                         }}
                                                     >
-                                                        {f.vacantUpdatedAt
-                                                            ? `更新：${formatDateOnly(f.vacantUpdatedAt)}`
+                                                        {getFacilityUpdatedDate(f)
+                                                            ? `更新：${getFacilityUpdatedDate(f)}`
                                                             : ""}
                                                     </div>
 
