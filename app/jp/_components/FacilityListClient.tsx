@@ -179,6 +179,19 @@ function formatDateOnly(value: any) {
     return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
 }
 
+function getUpdatedAt(f: any) {
+    return pick(
+        f.vacantUpdatedAt,
+        f.vacant_updated_at,
+        f.updatedAt,
+        f.updated_at,
+        f.modifiedAt,
+        f.modified_at,
+        f.createdAt,
+        f.created_at
+    );
+}
+
 function getFacilityUpdatedDate(f: Facility) {
     return formatDateOnly(
         pick(
@@ -956,8 +969,8 @@ export function FacilityListClient(props: {
                                                             fontSize: 12,
                                                         }}
                                                     >
-                                                        {getFacilityUpdatedDate(f)
-                                                            ? `更新：${getFacilityUpdatedDate(f)}`
+                                                        {getUpdatedAt(f)
+                                                            ? `更新：${formatDateOnly(getUpdatedAt(f))}`
                                                             : ""}
                                                     </div>
 
