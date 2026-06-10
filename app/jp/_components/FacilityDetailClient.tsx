@@ -854,28 +854,6 @@ export function FacilityDetailClient(props: {
                                 {facility.name}
                             </h1>
 
-                            <pre
-
-  style={{
-
-    fontSize: 10,
-
-    whiteSpace: "pre-wrap",
-
-    background: "#f5f5f5",
-
-    padding: 10,
-
-    overflowX: "auto"
-
-  }}
-
->
-
-  {JSON.stringify(facility, null, 2)}
-
-</pre>
-
                             <div
                                 style={{
                                     marginTop: 12,
