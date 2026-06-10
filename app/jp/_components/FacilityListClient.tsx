@@ -183,11 +183,13 @@ function getUpdatedDateText(f: Facility) {
     return formatDateOnly(
         pick(
             f.vacantUpdatedAt,
-            (f as any).vacant_updated_at,
+            (f as any).vacancyUpdatedAt,
             (f as any).updatedAt,
             (f as any).updated_at,
             (f as any).lastUpdatedAt,
-            (f as any).last_updated_at
+            (f as any).last_updated_at,
+            (f as any).createdAt,
+            (f as any).created_at
         )
     );
 }
@@ -984,13 +986,16 @@ export function FacilityListClient(props: {
                                                         flexWrap: "wrap",
                                                     }}
                                                 >
+                                                    <div style={{ color: "red" }}>
+  DEBUG: {updatedDateText}
+</div>
                                                     <div
                                                         style={{
                                                             color: "#6b7280",
                                                             fontSize: 12,
                                                         }}
                                                     >
-                                                        {updatedDateText ? `更新：${updatedDateText}` : ""}
+                                                        更新：{updatedDateText || "未登録"}
                                                     </div>
 
                                                     <div
