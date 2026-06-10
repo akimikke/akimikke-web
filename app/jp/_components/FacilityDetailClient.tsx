@@ -264,6 +264,21 @@ function formatDateOnly(value: any) {
     return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
 }
 
+function getUpdatedDateText(f: Facility) {
+    return formatDateOnly(
+        pick(
+            f.vacantUpdatedAt,
+            (f as any).vacancyUpdatedAt,
+            (f as any).vacant_updated_at,
+            (f as any).vacancy_updated_at,
+            (f as any).updatedAt,
+            (f as any).updated_at,
+            (f as any).lastUpdatedAt,
+            (f as any).last_updated_at
+        )
+    );
+}
+
 function normalizeSsAvailability(raw: any): SsAvailabilityDay[] {
     if (!Array.isArray(raw)) return [];
 
@@ -628,6 +643,7 @@ export function FacilityDetailClient(props: {
     }
 
     const isTk = serviceKey === "tk";
+    const updatedDateText = getUpdatedDateText(facility);
     const acceptText = normalizeAcceptText(
         pick(facility.acceptTk, facility.accepttk, (facility as any).canAcceptNew)
     );
@@ -902,9 +918,9 @@ export function FacilityDetailClient(props: {
                         </div>
                     ) : null}
 
-                    {facility.vacantUpdatedAt ? (
+                    {updatedDateText ? (
                         <div style={{ marginTop: 14, color: "#6b7280", fontSize: 13 }}>
-                            更新：{formatDateOnly(facility.vacantUpdatedAt)}
+                            更新：{updatedDateText}
                         </div>
                     ) : null}
 

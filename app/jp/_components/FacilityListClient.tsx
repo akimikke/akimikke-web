@@ -179,14 +179,33 @@ function formatDateOnly(value: any) {
     return `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`;
 }
 
+function getUpdatedDateText(f: Facility) {
+    return formatDateOnly(
+        pick(
+            f.vacantUpdatedAt,
+            (f as any).vacant_updated_at,
+            (f as any).updatedAt,
+            (f as any).updated_at,
+            (f as any).lastUpdatedAt,
+            (f as any).last_updated_at
+        )
+    );
+}
+
 function getUpdatedAt(f: any) {
     return pick(
+        f.vacancyUpdatedAt,
+        f.vacancy_updated_at,
+
         f.vacantUpdatedAt,
         f.vacant_updated_at,
+
         f.updatedAt,
         f.updated_at,
+
         f.modifiedAt,
         f.modified_at,
+
         f.createdAt,
         f.created_at
     );
@@ -720,6 +739,8 @@ export function FacilityListClient(props: {
                                 prefSlug
                             ).trim();
 
+                            const updatedDateText = getUpdatedDateText(f);
+
                             const href = `/jp/${encodeURIComponent(actualPrefSlug)}/${encodeURIComponent(actualServiceKey)}/${encodeURIComponent(code)}${detailQs.toString() ? `?${detailQs.toString()}` : ""
                                 }`;
 
@@ -969,9 +990,7 @@ export function FacilityListClient(props: {
                                                             fontSize: 12,
                                                         }}
                                                     >
-                                                        {getUpdatedAt(f)
-                                                            ? `更新：${formatDateOnly(getUpdatedAt(f))}`
-                                                            : ""}
+                                                        {updatedDateText ? `更新：${updatedDateText}` : ""}
                                                     </div>
 
                                                     <div
