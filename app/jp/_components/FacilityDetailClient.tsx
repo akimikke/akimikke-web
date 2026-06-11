@@ -880,6 +880,15 @@ export function FacilityDetailClient(props: {
                             >
                                 {facility.address ?? ""}
                             </div>
+                            <div
+                                style={{
+                                    color: "#6b7280",
+                                    fontSize: 13,
+                                    marginTop: 8,
+                                }}
+                            >
+                                更新：{updatedDateText || "未登録"}
+                            </div>
                         </div>
 
                         <div
@@ -915,12 +924,6 @@ export function FacilityDetailClient(props: {
                             }}
                         >
                             {facility.vacantDetail}
-                        </div>
-                    ) : null}
-
-                    {updatedDateText ? (
-                        <div style={{ marginTop: 14, color: "#6b7280", fontSize: 13 }}>
-                            更新：{updatedDateText}
                         </div>
                     ) : null}
 
