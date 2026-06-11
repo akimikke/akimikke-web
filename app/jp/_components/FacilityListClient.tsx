@@ -975,6 +975,12 @@ export function FacilityListClient(props: {
                                                     </div>
                                                 </div>
 
+                                                {actualServiceKey === "tk" && (
+                                                    <pre style={{ fontSize: 10 }}>
+                                                        {JSON.stringify(f, null, 2)}
+                                                    </pre>
+                                                )}
+
                                                 {/* 下段 */}
                                                 <div
                                                     style={{
@@ -987,8 +993,8 @@ export function FacilityListClient(props: {
                                                     }}
                                                 >
                                                     <div style={{ color: "red" }}>
-  DEBUG: {updatedDateText}
-</div>
+                                                        DEBUG: {updatedDateText}
+                                                    </div>
                                                     <div
                                                         style={{
                                                             color: "#6b7280",
