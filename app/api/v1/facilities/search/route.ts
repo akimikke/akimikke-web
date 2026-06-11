@@ -512,12 +512,9 @@ export async function GET(req: Request) {
       vacantUpdatedAt: getAny(
         f,
         "vacantUpdatedAt",
+        "vacantupdatedAt",
         "vacant_updated_at",
-        "vacant_updated",
-        "vacancyUpdatedAt",
-        "vacancy_updated_at",
-        "updatedAt",
-        "updated_at"
+        "updatedAt"
       ),
       officialSiteUrl: getAny(f, "officialSiteUrl", "official_site_url", "webUrl"),
 
