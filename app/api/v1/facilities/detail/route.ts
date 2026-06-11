@@ -55,10 +55,10 @@ function normalizeFacility(raw: any) {
   const images = Array.isArray(raw?.images)
     ? raw.images
     : [
-        getAny(raw, "image1Url", "image1_url"),
-        getAny(raw, "image2Url", "image2_url"),
-        getAny(raw, "image3Url", "image3_url"),
-      ].filter(Boolean);
+      getAny(raw, "image1Url", "image1_url"),
+      getAny(raw, "image2Url", "image2_url"),
+      getAny(raw, "image3Url", "image3_url"),
+    ].filter(Boolean);
 
   return {
     ...raw,
@@ -71,7 +71,16 @@ function normalizeFacility(raw: any) {
 
     vacant: getAny(raw, "vacant"),
     vacantDetail: getAny(raw, "vacantDetail", "vacant_detail"),
-    vacantUpdatedAt: getAny(raw, "vacantUpdatedAt", "vacant_updated_at", "updatedAt"),
+    vacantUpdatedAt: getAny(
+      raw,
+      "vacantUpdatedAt",
+      "vacant_updated_at",
+      "vacant_updated",
+      "vacancyUpdatedAt",
+      "vacancy_updated_at",
+      "updatedAt",
+      "updated_at"
+    ),
 
     officialSiteUrl: getAny(raw, "officialSiteUrl", "official_site_url", "webUrl"),
 
@@ -135,7 +144,7 @@ export async function GET(req: Request) {
     const prefRaw = norm(searchParams.get("pref"));
     const pref = normalizePref(prefRaw);
     const code = norm(searchParams.get("code"));
-    
+
 
     if (!service || !code) {
       return NextResponse.json(

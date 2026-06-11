@@ -509,7 +509,16 @@ export async function GET(req: Request) {
 
       phoneNumber: getAny(f, "phoneNumber", "phone_number", "phone"),
       vacantDetail: getAny(f, "vacantDetail", "vacant_detail"),
-      vacantUpdatedAt: getAny(f, "vacantUpdatedAt", "vacant_updated_at", "updatedAt"),
+      vacantUpdatedAt: getAny(
+        f,
+        "vacantUpdatedAt",
+        "vacant_updated_at",
+        "vacant_updated",
+        "vacancyUpdatedAt",
+        "vacancy_updated_at",
+        "updatedAt",
+        "updated_at"
+      ),
       officialSiteUrl: getAny(f, "officialSiteUrl", "official_site_url", "webUrl"),
 
       image1Url: getAny(f, "image1Url", "image1_url", "image1", "image_1_url"),
