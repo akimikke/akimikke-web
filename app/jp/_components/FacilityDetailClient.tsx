@@ -666,25 +666,22 @@ export function FacilityDetailClient(props: {
         (facility as any).day_support
     );
     const selectedDisability = normalizeTagList(initialDisCsv);
-    const displayDisability =
-        selectedDisability.length > 0
-            ? selectedDisability
-            : normalizeTagList(
-                pick(
-                    facility.disabilityTags,
-                    facility.failure,
-                    facility.failureHd,
-                    facility.hdDisability,
-                    facility.failureJh,
-                    facility.jhDisability,
-                    facility.failureSss,
-                    facility.ssDisability,
-                    facility.disabilitiesSn,
-                    facility.snDisability,
-                    facility.failureJn,
-                    facility.jnDisability
-                )
-            );
+    const displayDisability = normalizeTagList(
+        pick(
+            facility.disabilityTags,
+            facility.failure,
+            facility.failureHd,
+            facility.hdDisability,
+            facility.failureJh,
+            facility.jhDisability,
+            facility.failureSss,
+            facility.ssDisability,
+            facility.disabilitiesSn,
+            facility.snDisability,
+            facility.failureJn,
+            facility.jnDisability
+        )
+    );
     const skDaySupport = displayOrUnknown(
         facility.daysupport,
         facility.daySupport,

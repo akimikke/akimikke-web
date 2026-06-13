@@ -11,6 +11,42 @@ function parseCsvParam(v: string | null): string[] {
   if (!s) return [];
   return s.split(",").map((x) => norm(x)).filter(Boolean);
 }
+function splitTags(v: any): string[] {
+  if (Array.isArray(v)) {
+    return v.map((x) => norm(x)).filter(Boolean);
+  }
+
+  const s = norm(v);
+  if (!s) return [];
+
+  return s
+    .replace(/[、，]/g, ",")
+    .replace(/[／/]/g, ",")
+    .split(",")
+    .map((x) => norm(x))
+    .filter(Boolean);
+}
+
+function getDisabilityTags(f: any): string[] {
+  return splitTags(
+    getAny(
+      f,
+      "disabilityTags",
+      "disability_tags",
+      "failure",
+      "failure_hd",
+      "hdDisability",
+      "failureJh",
+      "jhDisability",
+      "failureSss",
+      "ssDisability",
+      "disabilitiesSn",
+      "snDisability",
+      "failureJn",
+      "jnDisability"
+    )
+  );
+}
 function parseBool01(v: string | null): boolean {
   return v === "1" || v?.toLowerCase() === "true";
 }
@@ -602,7 +638,6 @@ export async function GET(req: Request) {
     }
 
     // フリーワード
-    // フリーワード
     if (q) {
       const qTokens = q
         .split(/\s+/)
@@ -620,6 +655,19 @@ export async function GET(req: Request) {
         `;
 
         return qTokens.every((token) => hay.includes(token));
+      });
+    }
+
+    // 障害種別フィルター
+    if (disabilitySelected.length > 0) {
+      filtered = filtered.filter((f: any) => {
+        const tags = getDisabilityTags(f);
+
+        if (disabilityMatch === "AND") {
+          return disabilitySelected.every((d) => tags.includes(d));
+        }
+
+        return disabilitySelected.some((d) => tags.includes(d));
       });
     }
 
