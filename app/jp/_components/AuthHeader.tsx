@@ -57,6 +57,7 @@ const wrapStyle: React.CSSProperties = {
     gap: 8,
     flexWrap: "nowrap",
     whiteSpace: "nowrap",
+    flexShrink: 0,
 };
 
 const loginTextStyle: React.CSSProperties = {
@@ -76,6 +77,7 @@ const linkStyle: React.CSSProperties = {
     fontWeight: 700,
     background: "#fff",
     whiteSpace: "nowrap",
+    flexShrink: 0,
 };
 
 const primaryLinkStyle: React.CSSProperties = {
@@ -83,6 +85,7 @@ const primaryLinkStyle: React.CSSProperties = {
     border: "none",
     color: "#fff",
     background: "#2563eb",
+    flexShrink: 0,
 };
 
 const logoutButtonStyle: React.CSSProperties = {

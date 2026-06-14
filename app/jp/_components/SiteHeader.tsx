@@ -15,8 +15,8 @@ export function SiteHeader() {
 }
 
 const headerStyle: React.CSSProperties = {
-    maxWidth: 1120,
-    margin: "0 auto 18px",
+    width: "100%",
+    margin: "0 0 18px",
     padding: "16px 20px",
     borderRadius: 20,
     background: "linear-gradient(135deg, #e0f2fe 0%, #ffffff 60%, #ecfdf5 100%)",
@@ -26,6 +26,7 @@ const headerStyle: React.CSSProperties = {
     justifyContent: "space-between",
     gap: 12,
     minHeight: 72,
+    boxSizing: "border-box",
 };
 
 const logoLinkStyle: React.CSSProperties = {
@@ -36,6 +37,8 @@ const logoLinkStyle: React.CSSProperties = {
     color: "#0f172a",
     fontSize: 22,
     fontWeight: 900,
+    flexShrink: 1,
+    minWidth: 0,
 };
 
 const logoImageStyle: React.CSSProperties = {
