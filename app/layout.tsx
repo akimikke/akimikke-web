@@ -68,6 +68,10 @@ export const metadata: Metadata = {
     "障害児相談支援",
   ],
 
+  verification: {
+    google: "bq3ZB8n5HnTDrqc5VrTDoGs78eV6Q6mshe_w_l-iOJ4",
+  },
+
   alternates: {
     canonical: "https://akimikke.com",
   },
