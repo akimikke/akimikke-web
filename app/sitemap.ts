@@ -14,7 +14,7 @@ const PREFS = [
 const SERVICES = ["sk","gh","ab","hd","jh","ss","sn","jn","tk"] as const;
 
 // 本番は https://あなたのドメイン にする（ローカルはこれでOK）
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://akimikke.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

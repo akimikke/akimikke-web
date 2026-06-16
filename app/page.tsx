@@ -148,6 +148,11 @@ export default function Home() {
             box-sizing: border-box !important;
           }
         }
+        @media (max-width: 600px) {
+          .service-grid {
+          grid-template-columns: 1fr !important;
+          }
+        }
       `}</style>
       <main style={pageStyle}>
         <section style={heroStyle}>
@@ -161,8 +166,14 @@ export default function Home() {
             <span style={heroTitleStyle}>AkiMikke</span>
           </Link>
 
+          <h1 style={heroH1Style}>
+            障害福祉サービスの空き状況検索ならAkiMikke（あきみっけ）
+          </h1>
+
           <p style={heroLeadStyle}>
-            地域・サービス・条件から、空きのある障害福祉事業所を探せます。
+            AkiMikke（あきみっけ）は、障害福祉サービスの空き状況を地域・サービス・条件から検索できるサイトです。
+            グループホーム、共同生活援助、生活介護、就労継続支援A型・B型、放課後等デイサービス、児童発達支援、
+            ショートステイ、短期入所、障害者支援施設、児童施設、計画相談支援などの施設探しに利用できます。
           </p>
 
           <div className="home-search-row" style={searchPanelStyle}>
@@ -218,7 +229,7 @@ export default function Home() {
                       key={value}
                       href={makeListHref(value)}
                       onClick={() => setPref(value)}
-                      style={value === pref ? prefButtonActiveStyle : prefButtonStyle}
+                      style={prefButtonStyle}
                     >
                       {label}
                     </Link>
@@ -235,13 +246,13 @@ export default function Home() {
             <p style={sectionLeadStyle}>利用したいサービスから空き情報を確認できます。</p>
           </div>
 
-          <div style={serviceGridStyle}>
+          <div className="service-grid" style={serviceGridStyle}>
             {SERVICE_OPTIONS.map((s) => (
               <Link
                 key={s.value}
                 href={`/jp/all/${s.value}`}
                 style={{
-                  ...(s.value === service ? serviceCardActiveStyle : serviceCardStyle),
+                  ...serviceCardStyle,
                   textDecoration: "none",
                   color: "inherit",
                   display: "block",
@@ -293,6 +304,8 @@ const pageStyle: CSSProperties = {
   padding: 24,
   fontFamily: "system-ui, -apple-system",
   background: "#f8fafc",
+  boxSizing: "border-box",
+  overflowX: "hidden",
 };
 
 const heroStyle: CSSProperties = {
@@ -336,6 +349,14 @@ const heroTitleStyle: CSSProperties = {
   fontSize: 34,
   fontWeight: 900,
   color: "#0f172a",
+};
+
+const heroH1Style: CSSProperties = {
+  margin: "14px 0 0",
+  color: "#0f172a",
+  fontSize: 28,
+  lineHeight: 1.35,
+  fontWeight: 900,
 };
 
 const heroLeadStyle: CSSProperties = {
@@ -433,14 +454,6 @@ const prefButtonStyle: CSSProperties = {
   color: "#111827",
 };
 
-const prefButtonActiveStyle: CSSProperties = {
-  ...prefButtonStyle,
-  border: "1px solid #0284c7",
-  background: "#e0f2fe",
-  color: "#0369a1",
-  fontWeight: 900,
-};
-
 const serviceGridStyle: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
@@ -456,12 +469,11 @@ const serviceCardStyle: CSSProperties = {
   cursor: "pointer",
   textDecoration: "none",
   color: "inherit",
-};
-
-const serviceCardActiveStyle: CSSProperties = {
-  ...serviceCardStyle,
-  border: "2px solid #0284c7",
-  background: "#f0f9ff",
+  boxSizing: "border-box",
+  width: "100%",
+  maxWidth: "100%",
+  minWidth: 0,
+  overflowWrap: "break-word",
 };
 
 const serviceNameStyle: CSSProperties = {
@@ -469,6 +481,9 @@ const serviceNameStyle: CSSProperties = {
   fontSize: 17,
   fontWeight: 900,
   color: "#0f172a",
+  lineHeight: 1.45,
+  wordBreak: "keep-all",
+  overflowWrap: "anywhere",
 };
 
 const serviceDescStyle: CSSProperties = {
