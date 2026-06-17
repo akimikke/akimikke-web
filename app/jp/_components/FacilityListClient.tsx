@@ -597,13 +597,53 @@ export function FacilityListClient(props: {
         <>
             <style>{`
               @media (max-width: 900px) {
-                .facility-card-layout {
+                .facility-card-link {
                   display: block !important;
+                  width: 100% !important;
+                  max-width: 100% !important;
+                  overflow: hidden !important;
+                }
+
+                .facility-card-outer {
+                  width: 100% !important;
+                  max-width: 100% !important;
+                  min-width: 0 !important;
+                  overflow: hidden !important;
+                  box-sizing: border-box !important;
+                }
+
+                .facility-card-layout {
+                  display: grid !important;
+                  grid-template-columns: minmax(0, 1fr) !important;
+                  width: 100% !important;
+                  max-width: 100% !important;
+                  min-width: 0 !important;
                 }
 
                 .facility-card-image {
+                  width: 100% !important;
                   min-height: 220px !important;
                   height: 220px !important;
+                }
+
+                .facility-card-body {
+                  width: 100% !important;
+                  max-width: 100% !important;
+                  min-width: 0 !important;
+                  overflow: hidden !important;
+                  box-sizing: border-box !important;
+                }
+
+                .facility-card-bottom {
+                  display: grid !important;
+                  grid-template-columns: 1fr !important;
+                  gap: 12px !important;
+                }
+
+                .facility-detail-button {
+                  width: 100% !important;
+                  max-width: 100% !important;
+                  box-sizing: border-box !important;
                 }
               }
             `}</style>
@@ -750,9 +790,17 @@ export function FacilityListClient(props: {
                                 <Link
                                     key={code || f.name || href}
                                     href={href}
-                                    style={{ textDecoration: "none", color: "inherit" }}
+                                    className="facility-card-link"
+                                    style={{
+                                        textDecoration: "none",
+                                        color: "inherit",
+                                        display: "block",
+                                        width: "100%",
+                                        maxWidth: "100%",
+                                    }}
                                 >
                                     <div
+                                        className="facility-card-outer"
                                         style={{
                                             border: "1px solid #e5e7eb",
                                             borderRadius: 20,
@@ -760,6 +808,10 @@ export function FacilityListClient(props: {
                                             background: "#fff",
                                             boxShadow: "0 2px 10px rgba(15,23,42,0.05)",
                                             transition: "all 0.2s ease",
+                                            width: "100%",
+                                            maxWidth: "100%",
+                                            minWidth: 0,
+                                            boxSizing: "border-box",
                                         }}
                                     >
                                         <div
@@ -861,11 +913,15 @@ export function FacilityListClient(props: {
 
                                             {/* 右：情報 */}
                                             <div
+                                                className="facility-card-body"
                                                 style={{
                                                     padding: 20,
                                                     display: "flex",
                                                     flexDirection: "column",
                                                     justifyContent: "space-between",
+                                                    minWidth: 0,
+                                                    maxWidth: "100%",
+                                                    overflow: "hidden",
                                                 }}
                                             >
                                                 <div>
@@ -977,6 +1033,7 @@ export function FacilityListClient(props: {
 
                                                 {/* 下段 */}
                                                 <div
+                                                    className="facility-card-bottom"
                                                     style={{
                                                         marginTop: 20,
                                                         display: "flex",
@@ -984,9 +1041,10 @@ export function FacilityListClient(props: {
                                                         alignItems: "center",
                                                         gap: 12,
                                                         flexWrap: "wrap",
+                                                        minWidth: 0,
                                                     }}
                                                 >
-                                    
+
                                                     <div
                                                         style={{
                                                             color: "#6b7280",
@@ -997,6 +1055,7 @@ export function FacilityListClient(props: {
                                                     </div>
 
                                                     <div
+                                                        className="facility-detail-button"
                                                         style={{
                                                             display: "inline-flex",
                                                             alignItems: "center",
@@ -1007,6 +1066,7 @@ export function FacilityListClient(props: {
                                                             color: "#fff",
                                                             fontWeight: 800,
                                                             fontSize: 14,
+                                                            boxSizing: "border-box",
                                                         }}
                                                     >
                                                         詳細を見る →
