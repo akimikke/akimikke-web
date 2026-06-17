@@ -294,6 +294,15 @@ export default function Home() {
             </a>
           </div>
         </section>
+        <footer style={footerStyle}>
+          <div style={footerLinksStyle}>
+            <Link href="/jp/about" style={footerLinkStyle}>運営法人</Link>
+            <Link href="/jp/faq" style={footerLinkStyle}>FAQ</Link>
+            <Link href="/jp/terms" style={footerLinkStyle}>利用規約</Link>
+            <Link href="/jp/privacy" style={footerLinkStyle}>プライバシーポリシー</Link>
+          </div>
+          <p style={footerCopyStyle}>© Aokoma LLC. AkiMikke</p>
+        </footer>
       </main>
     </>
   );
@@ -562,4 +571,31 @@ const favoriteTopButtonStyle: CSSProperties = {
   textDecoration: "none",
   textAlign: "center",
   border: "1px solid #d1d5db",
+};
+
+const footerStyle: CSSProperties = {
+  maxWidth: 1120,
+  margin: "32px auto 0",
+  padding: "24px 0 8px",
+  color: "#64748b",
+};
+
+const footerLinksStyle: CSSProperties = {
+  display: "flex",
+  flexWrap: "wrap",
+  gap: 14,
+  justifyContent: "center",
+};
+
+const footerLinkStyle: CSSProperties = {
+  color: "#334155",
+  textDecoration: "none",
+  fontWeight: 700,
+  fontSize: 14,
+};
+
+const footerCopyStyle: CSSProperties = {
+  marginTop: 14,
+  textAlign: "center",
+  fontSize: 12,
 };
