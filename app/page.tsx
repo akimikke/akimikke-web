@@ -300,6 +300,8 @@ export default function Home() {
             <Link href="/jp/faq" style={footerLinkStyle}>FAQ</Link>
             <Link href="/jp/terms" style={footerLinkStyle}>利用規約</Link>
             <Link href="/jp/privacy" style={footerLinkStyle}>プライバシーポリシー</Link>
+            <Link href="/jp/withdrawal" style={footerLinkStyle}>退会・アカウント削除</Link>
+            <Link href="/jp/social-media-policy" style={footerLinkStyle}>ソーシャルメディアポリシー</Link>
           </div>
           <p style={footerCopyStyle}>© Aokoma LLC. AkiMikke</p>
         </footer>
