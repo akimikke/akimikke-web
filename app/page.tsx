@@ -296,6 +296,7 @@ export default function Home() {
         </section>
         <footer style={footerStyle}>
           <div style={footerLinksStyle}>
+            <Link href="/jp/about-akimikke" style={footerLinkStyle}>AkiMikkeについて</Link>
             <Link href="/jp/about" style={footerLinkStyle}>運営法人</Link>
             <Link href="/jp/faq" style={footerLinkStyle}>FAQ</Link>
             <Link href="/jp/contact" style={footerLinkStyle}>お問い合わせ</Link>
@@ -303,6 +304,7 @@ export default function Home() {
             <Link href="/jp/privacy" style={footerLinkStyle}>プライバシーポリシー</Link>
             <Link href="/jp/withdrawal" style={footerLinkStyle}>退会・アカウント削除</Link>
             <Link href="/jp/social-media-policy" style={footerLinkStyle}>ソーシャルメディアポリシー</Link>
+            <Link href="/jp/sitemap-page" style={footerLinkStyle}>サイトマップ</Link>
           </div>
           <p style={footerCopyStyle}>© Aokoma LLC. AkiMikke</p>
         </footer>
