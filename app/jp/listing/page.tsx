@@ -22,10 +22,10 @@ export default function ListingPage() {
             <li>就労継続支援A型・B型</li>
             <li>放課後等デイサービス</li>
             <li>児童発達支援</li>
-            <li>ショートステイ・短期入所</li>
+            <li>ショートステイ（短期入所）</li>
             <li>障害者支援施設</li>
             <li>児童施設</li>
-            <li>計画相談支援・相談支援事業</li>
+            <li>計画相談支援（障害児相談支援含む）</li>
           </ul>
         </section>
 
@@ -39,7 +39,7 @@ export default function ListingPage() {
             <li>送迎・医療的ケア・日中一時支援などの対応状況</li>
             <li>施設の特徴・紹介文</li>
             <li>施設写真</li>
-            <li>問い合わせ先</li>
+            <li>問い合わせ先など</li>
           </ul>
         </section>
 
