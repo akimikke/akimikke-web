@@ -663,11 +663,11 @@ const footerCopyStyle: CSSProperties = {
 };
 
 const footerSectionStyle = {
-  marginBottom: "24px",
+  marginBottom: "12px",
 };
 
 const footerHeadingStyle = {
   fontSize: "16px",
   fontWeight: 700,
-  marginBottom: "12px",
+  marginBottom: "4px",
 };
