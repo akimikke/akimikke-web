@@ -298,6 +298,7 @@ export default function Home() {
           <div style={footerLinksStyle}>
             <Link href="/jp/about" style={footerLinkStyle}>運営法人</Link>
             <Link href="/jp/faq" style={footerLinkStyle}>FAQ</Link>
+            <Link href="/jp/contact" style={footerLinkStyle}>お問い合わせ</Link>
             <Link href="/jp/terms" style={footerLinkStyle}>利用規約</Link>
             <Link href="/jp/privacy" style={footerLinkStyle}>プライバシーポリシー</Link>
             <Link href="/jp/withdrawal" style={footerLinkStyle}>退会・アカウント削除</Link>
