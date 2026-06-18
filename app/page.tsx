@@ -295,18 +295,75 @@ export default function Home() {
           </div>
         </section>
         <footer style={footerStyle}>
-          <div style={footerLinksStyle}>
-            <Link href="/jp/about-akimikke" style={footerLinkStyle}>AkiMikkeについて</Link>
-            <Link href="/jp/about" style={footerLinkStyle}>運営法人</Link>
-            <Link href="/jp/faq" style={footerLinkStyle}>FAQ</Link>
-            <Link href="/jp/contact" style={footerLinkStyle}>お問い合わせ</Link>
-            <Link href="/jp/terms" style={footerLinkStyle}>利用規約</Link>
-            <Link href="/jp/privacy" style={footerLinkStyle}>プライバシーポリシー</Link>
-            <Link href="/jp/withdrawal" style={footerLinkStyle}>退会・アカウント削除</Link>
-            <Link href="/jp/social-media-policy" style={footerLinkStyle}>ソーシャルメディアポリシー</Link>
-            <Link href="/jp/sitemap-page" style={footerLinkStyle}>サイトマップ</Link>
+          <div style={footerSectionStyle}>
+            <h3 style={footerHeadingStyle}>AkiMikkeについて</h3>
+
+            <div style={footerLinksStyle}>
+              <Link href="/jp/about-akimikke" style={footerLinkStyle}>
+                AkiMikkeについて
+              </Link>
+
+              <Link href="/jp/about" style={footerLinkStyle}>
+                運営法人
+              </Link>
+
+              <Link href="/jp/faq" style={footerLinkStyle}>
+                FAQ
+              </Link>
+
+              <Link href="/jp/contact" style={footerLinkStyle}>
+                お問い合わせ
+              </Link>
+            </div>
           </div>
-          <p style={footerCopyStyle}>© Aokoma LLC. AkiMikke</p>
+
+          <div style={footerSectionStyle}>
+            <h3 style={footerHeadingStyle}>事業所向け</h3>
+
+            <div style={footerLinksStyle}>
+              <Link href="/jp/listing" style={footerLinkStyle}>
+                施設掲載について
+              </Link>
+
+              <Link href="/jp/facility-update" style={footerLinkStyle}>
+                施設情報修正依頼
+              </Link>
+
+              <Link href="/jp/contact" style={footerLinkStyle}>
+                掲載に関するお問い合わせ
+              </Link>
+            </div>
+          </div>
+
+          <div style={footerSectionStyle}>
+            <h3 style={footerHeadingStyle}>ポリシー</h3>
+
+            <div style={footerLinksStyle}>
+              <Link href="/jp/terms" style={footerLinkStyle}>
+                利用規約
+              </Link>
+
+              <Link href="/jp/privacy" style={footerLinkStyle}>
+                プライバシーポリシー
+              </Link>
+
+              <Link href="/jp/withdrawal" style={footerLinkStyle}>
+                退会・アカウント削除
+              </Link>
+
+              <Link href="/jp/social-media-policy" style={footerLinkStyle}>
+                ソーシャルメディアポリシー
+              </Link>
+
+              <Link href="/jp/sitemap-page" style={footerLinkStyle}>
+                サイトマップ
+              </Link>
+            </div>
+          </div>
+
+          <p style={footerCopyStyle}>
+            © Aokoma LLC. AkiMikke
+          </p>
         </footer>
       </main>
     </>
@@ -603,4 +660,14 @@ const footerCopyStyle: CSSProperties = {
   marginTop: 14,
   textAlign: "center",
   fontSize: 12,
+};
+
+const footerSectionStyle = {
+  marginBottom: "24px",
+};
+
+const footerHeadingStyle = {
+  fontSize: "16px",
+  fontWeight: 700,
+  marginBottom: "12px",
 };
