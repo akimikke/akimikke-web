@@ -354,16 +354,16 @@ export default function Home() {
             <h3 style={footerHeadingStyle}>事業所向け</h3>
 
             <div style={footerLinksStyle}>
+              <Link href="/jp/recruit-facilities" style={footerLinkStyle}>
+                掲載施設募集中
+              </Link>
+              
               <Link href="/jp/listing" style={footerLinkStyle}>
                 施設掲載について
               </Link>
 
               <Link href="/jp/facility-update" style={footerLinkStyle}>
                 施設情報修正依頼
-              </Link>
-
-              <Link href="/jp/contact" style={footerLinkStyle}>
-                掲載に関するお問い合わせ
               </Link>
 
               <Link href="/jp/advertising" style={footerLinkStyle}>
