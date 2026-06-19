@@ -1,5 +1,11 @@
 import Link from "next/link";
 
+export const metadata = {
+  title: "サイトマップ | AkiMikke（あきみっけ）",
+  description:
+    "AkiMikke（あきみっけ）のページ一覧です。",
+};
+
 export default function SitemapPage() {
     return (
         <main style={pageStyle}>

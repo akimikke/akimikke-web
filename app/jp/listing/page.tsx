@@ -1,5 +1,11 @@
 import Link from "next/link";
 
+export const metadata = {
+  title: "施設掲載について | AkiMikke（あきみっけ）",
+  description:
+    "障害福祉サービス事業所の掲載募集ページです。掲載対象サービスや掲載方法についてご案内しています。",
+};
+
 export default function ListingPage() {
   return (
     <main style={pageStyle}>

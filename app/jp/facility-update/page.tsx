@@ -1,5 +1,11 @@
 import Link from "next/link";
 
+export const metadata = {
+  title: "施設情報修正依頼 | AkiMikke（あきみっけ）",
+  description:
+    "掲載施設の情報修正方法をご案内しています。事業所登録フォームによる更新手順やお問い合わせ先を掲載しています。",
+};
+
 const formUrl =
   "https://script.google.com/a/macros/aokoma.com/s/AKfycbwcZlJCGQKFwZwQX3plnX2T8VH4aGeANOPgHwBM9Tm2jUxZZHLAdHbxGzUzH97wCI3v3g/exec";
 

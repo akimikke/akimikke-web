@@ -1,5 +1,11 @@
 import Link from "next/link";
 
+export const metadata = {
+  title: "AkiMikkeとは | AkiMikke（あきみっけ）",
+  description:
+    "AkiMikke（あきみっけ）は障害福祉サービスの空き状況検索サービスです。地域やサービス種別から施設を探すことができます。",
+};
+
 export default function AboutAkiMikkePage() {
   return (
     <main style={pageStyle}>

@@ -265,6 +265,39 @@ export default function Home() {
           </div>
         </section>
 
+        <section style={facilityRecruitStyle}>
+          <div>
+            <div style={facilityRecruitBadgeStyle}>掲載施設募集中</div>
+
+            <h2 style={facilityRecruitTitleStyle}>
+              障害福祉サービス事業所を無料で掲載できます！
+            </h2>
+
+            <p style={facilityRecruitLeadStyle}>
+              AkiMikkeでは、グループホーム、生活介護、就労継続支援A型/B型、放課後等デイサービス、
+              児童発達支援、ショートステイ、計画相談支援などの施設情報を無料で掲載できます。
+              空き状況を利用者・ご家族・相談支援専門員・行政担当職員へ届けませんか。
+            </p>
+
+            <div style={facilityRecruitPointWrapStyle}>
+              <span style={facilityRecruitPointStyle}>掲載費無料</span>
+              <span style={facilityRecruitPointStyle}>空き情報掲載</span>
+              <span style={facilityRecruitPointStyle}>施設写真掲載</span>
+              <span style={facilityRecruitPointStyle}>情報更新対応</span>
+            </div>
+          </div>
+
+          <div style={facilityRecruitButtonWrapStyle}>
+            <Link href="/jp/recruit-facilities" style={facilityRecruitPrimaryButtonStyle}>
+              無料掲載について見る
+            </Link>
+
+            <Link href="/jp/listing" style={facilityRecruitSecondaryButtonStyle}>
+              施設掲載について
+            </Link>
+          </div>
+        </section>
+
         <AdBox label="バナー広告枠" />
 
         <section style={appBannerStyle}>
@@ -331,6 +364,10 @@ export default function Home() {
 
               <Link href="/jp/contact" style={footerLinkStyle}>
                 掲載に関するお問い合わせ
+              </Link>
+
+              <Link href="/jp/advertising" style={footerLinkStyle}>
+                広告掲載について
               </Link>
             </div>
           </div>
@@ -670,4 +707,91 @@ const footerHeadingStyle = {
   fontSize: "16px",
   fontWeight: 700,
   marginBottom: "4px",
+};
+
+const facilityRecruitStyle: CSSProperties = {
+  maxWidth: 1120,
+  margin: "28px auto 0",
+  padding: 24,
+  borderRadius: 24,
+  background: "linear-gradient(135deg, #ecfdf5 0%, #ffffff 55%, #e0f2fe 100%)",
+  border: "2px solid #86efac",
+  display: "flex",
+  justifyContent: "space-between",
+  gap: 20,
+  flexWrap: "wrap",
+  boxShadow: "0 8px 24px rgba(15, 23, 42, 0.06)",
+};
+
+const facilityRecruitBadgeStyle: CSSProperties = {
+  display: "inline-flex",
+  padding: "6px 12px",
+  borderRadius: 999,
+  background: "#dcfce7",
+  color: "#166534",
+  fontSize: 13,
+  fontWeight: 900,
+  border: "1px solid #86efac",
+};
+
+const facilityRecruitTitleStyle: CSSProperties = {
+  margin: "12px 0 0",
+  fontSize: 24,
+  lineHeight: 1.4,
+  fontWeight: 900,
+  color: "#0f172a",
+};
+
+const facilityRecruitLeadStyle: CSSProperties = {
+  marginTop: 10,
+  color: "#475569",
+  fontSize: 14,
+  lineHeight: 1.9,
+  maxWidth: 760,
+};
+
+const facilityRecruitPointWrapStyle: CSSProperties = {
+  marginTop: 14,
+  display: "flex",
+  flexWrap: "wrap",
+  gap: 8,
+};
+
+const facilityRecruitPointStyle: CSSProperties = {
+  padding: "6px 10px",
+  borderRadius: 999,
+  background: "#ffffff",
+  color: "#0369a1",
+  fontSize: 12,
+  fontWeight: 800,
+  border: "1px solid #bae6fd",
+};
+
+const facilityRecruitButtonWrapStyle: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 10,
+  justifyContent: "center",
+  minWidth: 180,
+};
+
+const facilityRecruitPrimaryButtonStyle: CSSProperties = {
+  padding: "12px 18px",
+  borderRadius: 12,
+  background: "#16a34a",
+  color: "#fff",
+  fontWeight: 900,
+  textDecoration: "none",
+  textAlign: "center",
+};
+
+const facilityRecruitSecondaryButtonStyle: CSSProperties = {
+  padding: "12px 18px",
+  borderRadius: 12,
+  background: "#fff",
+  color: "#166534",
+  fontWeight: 900,
+  textDecoration: "none",
+  textAlign: "center",
+  border: "1px solid #86efac",
 };
