@@ -91,6 +91,14 @@ const faqs = [
 export default function RecruitFacilitiesPage() {
     return (
         <main className="min-h-screen bg-slate-50">
+            <div className="mx-auto max-w-5xl px-4 pt-6">
+                <Link
+                    href="/"
+                    className="inline-flex items-center font-bold text-slate-600 hover:text-sky-700"
+                >
+                    ← AkiMikke ホームへ戻る
+                </Link>
+            </div>
             <section className="bg-gradient-to-b from-sky-100 to-white px-4 py-16">
                 <div className="mx-auto max-w-5xl text-center">
                     <p className="mb-4 inline-block rounded-full bg-sky-600 px-4 py-2 text-sm font-bold text-white">
