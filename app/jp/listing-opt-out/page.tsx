@@ -73,7 +73,7 @@ export default function ListingOptOutPage() {
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-10">
       <div className="mx-auto max-w-2xl rounded-xl bg-white p-6 shadow-sm">
-        <a href="/jp" className="text-sm text-blue-600">
+        <a href="https://www.akimikke.com/" className="text-sm text-blue-600">
           ← ホームに戻る
         </a>
 
