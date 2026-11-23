@@ -147,7 +147,7 @@ export default function ListingPage() {
 
                     <div className="mt-6">
                         <Link
-                            href="/jp/facility-update"
+                            href="/jp/listing-opt-out"
                             className="inline-block rounded-full bg-slate-900 px-7 py-4 font-bold text-white hover:bg-slate-700"
                         >
                             施設情報修正依頼へ

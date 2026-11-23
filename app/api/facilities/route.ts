@@ -122,7 +122,7 @@ export async function GET(req: Request) {
   }
 
   const upstreamUrl = new URL(upstreamBase);
-  upstreamUrl.searchParams.set("type", service.toLowerCase()); // upstreamは大文字想定
+  upstreamUrl.searchParams.set("service", service.toLowerCase()); // upstreamは大文字想定
 
   try {
     const upstreamRes = await fetch(upstreamUrl.toString(), { cache: "no-store" });
@@ -140,7 +140,11 @@ export async function GET(req: Request) {
     }
 
     const upstreamJson = await upstreamRes.json();
-    const facilitiesRaw = Array.isArray(upstreamJson?.facilities) ? upstreamJson.facilities : [];
+    const facilitiesRaw = Array.isArray(upstreamJson)
+      ? upstreamJson
+      : Array.isArray(upstreamJson?.facilities)
+        ? upstreamJson.facilities
+        : [];
 
     const getAny = (obj: any, ...keys: string[]) => {
       for (const key of keys) {

@@ -362,7 +362,7 @@ export default function Home() {
                 施設掲載について
               </Link>
 
-              <Link href="/jp/facility-update" style={footerLinkStyle}>
+              <Link href="/jp/listing-opt-out" style={footerLinkStyle}>
                 施設情報修正依頼
               </Link>
 

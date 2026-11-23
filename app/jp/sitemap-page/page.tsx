@@ -47,7 +47,7 @@ export default function SitemapPage() {
                     <ul style={listStyle}>
                         <li><Link href="/jp/recruit-facilities">掲載施設募集中</Link></li>
                         <li><Link href="/jp/listing">施設掲載について</Link></li>
-                        <li><Link href="/jp/facility-update">施設情報修正依頼</Link></li>
+                        <li><Link href="/jp/listing-opt-out">施設情報修正依頼</Link></li>
                         <li><Link href="/jp/advertising">広告掲載について</Link></li>
                         <li><Link href="/jp/contact">掲載に関するお問い合わせ</Link></li>
                     </ul>
