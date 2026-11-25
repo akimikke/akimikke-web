@@ -445,6 +445,33 @@ export default async function Page({
           >
             <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 12 }}>絞り込み条件</div>
 
+            {/* オープンデータ掲載施設についての案内 */}
+            <div
+              style={{
+                marginTop: 12,
+                marginBottom: 16,
+                padding: "12px",
+                borderRadius: 10,
+                background: "#eff6ff",
+                border: "1px solid #bfdbfe",
+                color: "#1e40af",
+                fontSize: 12,
+                lineHeight: 1.8,
+              }}
+            >
+              <div style={{ fontWeight: 800, marginBottom: 6 }}>
+                施設情報について
+              </div>
+
+              公的なオープンデータをもとに掲載している施設には、
+              詳細情報が未確認の場合があります。
+
+              <div style={{ marginTop: 8 }}>
+                詳細条件で施設が見つからない場合は、
+                都道府県・市区町村のみで検索してください。
+              </div>
+            </div>
+
             <form method="GET" style={{ display: "grid", gap: 14 }}>
               {serviceKey !== "all" ? (
                 <RegionSelectClient

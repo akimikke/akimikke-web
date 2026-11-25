@@ -543,8 +543,15 @@ export async function GET(req: Request) {
       code: getAny(f, "code", "facility_code"),
       name: getAny(f, "name", "facility_name"),
 
-      phoneNumber: getAny(f, "phoneNumber", "phone_number", "phone"),
+      phoneNumber: getAny(f, "phoneNumber", "phone"),
       vacantDetail: getAny(f, "vacantDetail", "vacant_detail"),
+
+      informationSource:
+        norm(getAny(f, "vacantDetail", "vacant_detail")) ===
+        "WAMNET掲載情報・空き状況未確認"
+          ? "wamnet"
+          : "unknown",
+
       vacantUpdatedAt: getAny(
         f,
         "vacantUpdatedAt",

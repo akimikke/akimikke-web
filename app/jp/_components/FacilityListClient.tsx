@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { FavoriteButton } from "./FavoriteButton";
 
 type Facility = {
+    informationSource?: string;
     code?: string;
     name?: string;
     prefecture?: string;
@@ -540,6 +541,23 @@ export function FacilityListClient(props: {
         return [1, -1, page - 1, page, page + 1, -1, totalPages];
     }, [page, totalPages]);
 
+    function buildClearDetailFiltersHref() {
+        const qs = new URLSearchParams(window.location.search);
+        const keepKeys = ["area_pref", "city", "q", "order"];
+        const nextQs = new URLSearchParams();
+
+        for (const key of keepKeys) {
+            const value = qs.get(key);
+            if (value) {
+                nextQs.set(key, value);
+            }
+        }
+
+        const query = nextQs.toString();
+
+        return `/jp/${prefSlug}/${serviceKey}${query ? `?${query}` : ""}`;
+    }
+
     function buildPageHref(nextPage: number) {
         const queryPart = apiPath.split("?")[1] ?? "";
         const qs = new URLSearchParams(queryPart);
@@ -743,10 +761,46 @@ export function FacilityListClient(props: {
                         background: "#fff",
                     }}
                 >
-                    <div style={{ fontSize: 18, fontWeight: 800 }}>該当する施設がありません</div>
-                    <div style={{ marginTop: 8, color: "#666", lineHeight: 1.7 }}>
-                        条件を変更して再検索してください。
+                    <div style={{ fontSize: 18, fontWeight: 800 }}>
+                        選択した条件に一致する施設情報がありません
                     </div>
+
+                    <div style={{
+                        marginTop: 12,
+                        color: "#4b5563",
+                        fontSize: 14,
+                        lineHeight: 1.8,
+                    }}>
+                        AkiMikkeでは、事業所から直接登録された情報に加え、
+                        公開されている障害福祉サービス情報を掲載しています。
+                        <br />
+                        公開情報をもとに掲載している施設では、
+                        送迎・障害種別・受入条件などの詳細情報が
+                        未確認の場合があります。
+                        <br />
+                        詳細条件を解除することで、
+                        周辺の施設が表示される場合があります。
+                    </div>
+
+                    <button
+                        type="button"
+                        onClick={() => {
+                            window.location.href = buildClearDetailFiltersHref();
+                        }}
+                        style={{
+                            marginTop: 18,
+                            padding: "12px 18px",
+                            borderRadius: 10,
+                            border: "none",
+                            background: "#2563eb",
+                            color: "#ffffff",
+                            fontSize: 14,
+                            fontWeight: 700,
+                            cursor: "pointer",
+                        }}
+                    >
+                        詳細条件を解除して再検索する
+                    </button>
                 </div>
             ) : (
                 <>
@@ -951,6 +1005,24 @@ export function FacilityListClient(props: {
                                                             >
                                                                 {actualServiceLabel}
                                                             </div>
+                                                            {f.informationSource === "wamnet" && (
+                                                                <span
+                                                                    style={{
+                                                                        display: "inline-flex",
+                                                                        marginLeft: 6,
+                                                                        marginBottom: 8,
+                                                                        padding: "5px 10px",
+                                                                        borderRadius: 999,
+                                                                        background: "#f3f4f6",
+                                                                        color: "#4b5563",
+                                                                        border: "1px solid #d1d5db",
+                                                                        fontSize: 11,
+                                                                        fontWeight: 700,
+                                                                    }}
+                                                                >
+                                                                    オープンデータ掲載
+                                                                </span>
+                                                            )}
                                                             <div
                                                                 style={{
                                                                     fontSize: 18,
@@ -996,6 +1068,20 @@ export function FacilityListClient(props: {
                                                             )}
                                                         </div>
                                                     </div>
+
+                                                    {f.informationSource === "wamnet" && (
+                                                        <div
+                                                            style={{
+                                                                marginTop: 12,
+                                                                color: "#64748b",
+                                                                fontSize: 12,
+                                                                lineHeight: 1.7,
+                                                            }}
+                                                        >
+                                                            公的なオープンデータをもとに掲載しています。
+                                                            空き状況・サービスの詳細は施設へ直接お問い合わせください。
+                                                        </div>
+                                                    )}
 
                                                     {/* タグ */}
                                                     <div
