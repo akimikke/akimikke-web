@@ -6,6 +6,7 @@ import { FavoriteButton } from "./FavoriteButton";
 
 type Facility = {
     informationSource?: string;
+    conditionStatus?: "matched" | "unknown";
     code?: string;
     name?: string;
     prefecture?: string;
@@ -70,6 +71,11 @@ type SearchResponse = {
     total?: number;
     count?: number;
     facilities?: Facility[];
+
+    hasDetailFilters?: boolean;
+    matchedCount?: number;
+    unknownCount?: number;
+    unknownFacilities?: Facility[];
 };
 
 function normalizeImages(raw: string[] | string | undefined): string[] {
@@ -403,7 +409,15 @@ function renderServiceBadges(serviceKey: string, f: Facility, selectedDisability
             f.availability.some((d) => Number(d.rooms ?? 0) > 0);
 
         badges.push(
-            { label: "3ヶ月空き", value: hasSsAvailability ? "あり" : "なし", highlight: hasSsAvailability },
+            {
+                label: "3ヶ月空き",
+                value: hasSsAvailability
+                    ? "あり"
+                    : Array.isArray(f.availability) && f.availability.length > 0
+                        ? "なし"
+                        : "未確認",
+                highlight: hasSsAvailability,
+            },
             { label: "障害種別", value: displayOrUnknown(f.failureSss, (f as any).ssDisability, (f as any).ss_disability) },
             { label: "日中一時支援", value: displayOrUnknown(f.daysupport, (f as any).daySupport, (f as any).day_support) },
             { label: "性別", value: f.sex ?? "" }
@@ -447,6 +461,17 @@ export function FacilityListClient(props: {
     const [loading, setLoading] = useState(true);
     const [errorText, setErrorText] = useState<string | null>(null);
     const [facilities, setFacilities] = useState<Facility[]>([]);
+    const [unknownFacilities, setUnknownFacilities] =
+        useState<Facility[]>([]);
+
+    const [hasDetailFilters, setHasDetailFilters] =
+        useState(false);
+
+    const [matchedCount, setMatchedCount] =
+        useState(0);
+
+    const [unknownCount, setUnknownCount] =
+        useState(0);
     const [page, setPage] = useState(1);
     const [per, setPer] = useState(30);
     const [total, setTotal] = useState(0);
@@ -470,6 +495,27 @@ export function FacilityListClient(props: {
 
                 if (!cancelled) {
                     setFacilities(list);
+                    setUnknownFacilities(
+                        Array.isArray(data?.unknownFacilities)
+                            ? data.unknownFacilities
+                            : []
+                    );
+
+                    setHasDetailFilters(
+                        data?.hasDetailFilters === true
+                    );
+
+                    setMatchedCount(
+                        Number(data?.matchedCount ?? data?.total ?? list.length)
+                    );
+
+                    setUnknownCount(
+                        Number(
+                            data?.unknownCount ??
+                            data?.unknownFacilities?.length ??
+                            0
+                        )
+                    );
                     setPage(Number(data?.page ?? 1));
                     setPer(Number(data?.per ?? 30));
                     setTotal(Number(data?.total ?? list.length));
@@ -491,6 +537,11 @@ export function FacilityListClient(props: {
             cancelled = true;
         };
     }, [apiPath]);
+
+    const displayFacilities = [
+        ...facilities,
+        ...unknownFacilities,
+    ];
 
     const listHeaderStyle: React.CSSProperties = {
         marginBottom: 22,
@@ -747,11 +798,13 @@ export function FacilityListClient(props: {
                         fontSize: 14,
                     }}
                 >
-                    {total}件
+                    {hasDetailFilters
+                        ? `条件一致：${matchedCount}件 / 未確認：${unknownCount}件`
+                        : `${total}件`}
                 </div>
             </div>
 
-            {facilities.length === 0 ? (
+            {displayFacilities.length === 0 ? (
                 <div
                     style={{
                         marginTop: 16,
@@ -805,7 +858,7 @@ export function FacilityListClient(props: {
             ) : (
                 <>
                     <div style={{ marginTop: 14, display: "grid", gap: 14 }}>
-                        {facilities.map((f) => {
+                        {displayFacilities.map((f, index) => {
                             const code = String(f.code ?? "").trim();
 
                             const hasSsAvailability =
@@ -841,391 +894,485 @@ export function FacilityListClient(props: {
                                 }`;
 
                             return (
-                                <Link
-                                    key={code || f.name || href}
-                                    href={href}
-                                    className="facility-card-link"
-                                    style={{
-                                        textDecoration: "none",
-                                        color: "inherit",
-                                        display: "block",
-                                        width: "100%",
-                                        maxWidth: "100%",
-                                    }}
-                                >
-                                    <div
-                                        className="facility-card-outer"
+                                <div key={`${actualServiceKey}:${code || f.name || href}`}>
+
+                                    {hasDetailFilters && index === 0 && (
+                                        <div
+                                            style={{
+                                                marginBottom: 14,
+                                                padding: 16,
+                                                borderRadius: 12,
+                                                background: "#f0fdf4",
+                                                border: "1px solid #bbf7d0",
+                                                color: "#166534",
+                                            }}
+                                        >
+                                            <div style={{
+                                                fontSize: 17,
+                                                fontWeight: 800,
+                                            }}>
+                                                条件に一致する施設：{matchedCount}件
+                                            </div>
+
+                                            {matchedCount === 0 && (
+                                                <div style={{
+                                                    marginTop: 8,
+                                                    fontSize: 13,
+                                                }}>
+                                                    指定した条件に一致する施設情報がありません。
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {hasDetailFilters &&
+                                        unknownFacilities.length > 0 &&
+                                        index === facilities.length && (
+                                            <div
+                                                style={{
+                                                    marginTop: 16,
+                                                    marginBottom: 14,
+                                                    padding: 16,
+                                                    borderRadius: 12,
+                                                    background: "#f8fafc",
+                                                    border: "1px solid #cbd5e1",
+                                                    color: "#334155",
+                                                }}
+                                            >
+                                                <div style={{
+                                                    fontSize: 17,
+                                                    fontWeight: 800,
+                                                }}>
+                                                    詳細条件が未確認の施設：{unknownCount}件
+                                                </div>
+
+                                                <div style={{
+                                                    marginTop: 8,
+                                                    fontSize: 13,
+                                                    lineHeight: 1.8,
+                                                }}>
+                                                    選択した地域内の施設ですが、
+                                                    指定された詳細条件への対応状況は
+                                                    確認できていません。
+                                                    詳しくは施設へ直接お問い合わせください。
+                                                </div>
+                                            </div>
+                                        )}
+
+                                    <Link
+                                        key={code || f.name || href}
+                                        href={href}
+                                        className="facility-card-link"
                                         style={{
-                                            border: "1px solid #e5e7eb",
-                                            borderRadius: 20,
-                                            overflow: "hidden",
-                                            background: "#fff",
-                                            boxShadow: "0 2px 10px rgba(15,23,42,0.05)",
-                                            transition: "all 0.2s ease",
+                                            textDecoration: "none",
+                                            color: "inherit",
+                                            display: "block",
                                             width: "100%",
                                             maxWidth: "100%",
-                                            minWidth: 0,
-                                            boxSizing: "border-box",
                                         }}
                                     >
                                         <div
-                                            className="facility-card-layout"
+                                            className="facility-card-outer"
                                             style={{
-                                                display: "grid",
-                                                gridTemplateColumns: "180px 1fr",
-                                                gap: 0,
+                                                border: "1px solid #e5e7eb",
+                                                borderRadius: 20,
+                                                overflow: "hidden",
+                                                background: "#fff",
+                                                boxShadow: "0 2px 10px rgba(15,23,42,0.05)",
+                                                transition: "all 0.2s ease",
+                                                width: "100%",
+                                                maxWidth: "100%",
+                                                minWidth: 0,
+                                                boxSizing: "border-box",
                                             }}
                                         >
-                                            {/* 左：画像 */}
                                             <div
-                                                className="facility-card-image"
+                                                className="facility-card-layout"
                                                 style={{
-                                                    position: "relative",
-                                                    background: "#f3f4f6",
-                                                    minHeight: 150,
-                                                    height: 150,
+                                                    display: "grid",
+                                                    gridTemplateColumns: "180px 1fr",
+                                                    gap: 0,
                                                 }}
                                             >
-                                                {(() => {
-                                                    const imageUrls = normalizeImages(f.images);
-
-                                                    const fallbackImages = [
-                                                        f.image1Url,
-                                                        f.image2Url,
-                                                        f.image3Url,
-                                                        (f as any).image1_url,
-                                                        (f as any).image2_url,
-                                                        (f as any).image3_url,
-                                                        (f as any).image1,
-                                                        (f as any).image2,
-                                                        (f as any).image3,
-                                                    ].filter(Boolean) as string[];
-
-                                                    const thumb = imageUrls[0] || fallbackImages[0];
-
-                                                    return thumb ? (
-                                                        <img
-                                                            src={normalizeDriveImageUrl(thumb)}
-                                                            alt={String(f.name ?? "施設画像")}
-                                                            onError={(e) => {
-                                                                e.currentTarget.src = "/akimikke-logo.png";
-                                                                e.currentTarget.style.objectFit = "contain";
-                                                                e.currentTarget.style.padding = "48px";
-                                                                e.currentTarget.style.background = "#f8fafc";
-                                                            }}
-                                                            style={{
-                                                                display: "block",
-                                                                width: "100%",
-                                                                height: "100%",
-                                                                minHeight: 150,
-                                                                objectFit: "contain",
-                                                                background: "#f8fafc",
-                                                            }}
-                                                        />
-                                                    ) : (
-                                                        <div
-                                                            style={{
-                                                                width: "100%",
-                                                                height: "100%",
-                                                                minHeight: 150,
-                                                                display: "flex",
-                                                                alignItems: "center",
-                                                                justifyContent: "center",
-                                                                background: "#f8fafc",
-                                                            }}
-                                                        >
-                                                            <img
-                                                                src="/akimikke-logo.png"
-                                                                alt="AkiMikke"
-                                                                style={{
-                                                                    width: 96,
-                                                                    height: 96,
-                                                                    objectFit: "contain",
-                                                                    background: "#f8fafc",
-                                                                    opacity: 0.75,
-                                                                }}
-                                                            />
-                                                        </div>
-                                                    );
-                                                })()}
-
-                                                {/* お気に入り */}
+                                                {/* 左：画像 */}
                                                 <div
+                                                    className="facility-card-image"
                                                     style={{
-                                                        position: "absolute",
-                                                        top: 12,
-                                                        right: 12,
-                                                        background: "rgba(255,255,255,0.95)",
-                                                        borderRadius: 999,
-                                                        padding: 6,
-                                                        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+                                                        position: "relative",
+                                                        background: "#f3f4f6",
+                                                        minHeight: 150,
+                                                        height: 150,
                                                     }}
                                                 >
-                                                    <FavoriteButton facilityId={`${actualServiceKey}:${code}`} />
-                                                </div>
-                                            </div>
+                                                    {(() => {
+                                                        const imageUrls = normalizeImages(f.images);
 
-                                            {/* 右：情報 */}
-                                            <div
-                                                className="facility-card-body"
-                                                style={{
-                                                    padding: 20,
-                                                    display: "flex",
-                                                    flexDirection: "column",
-                                                    justifyContent: "space-between",
-                                                    minWidth: 0,
-                                                    maxWidth: "100%",
-                                                    overflow: "hidden",
-                                                }}
-                                            >
-                                                <div>
-                                                    {/* 上段 */}
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            justifyContent: "space-between",
-                                                            gap: 12,
-                                                            alignItems: "flex-start",
-                                                            flexWrap: "wrap",
-                                                        }}
-                                                    >
-                                                        <div style={{ flex: 1, minWidth: 0 }}>
+                                                        const fallbackImages = [
+                                                            f.image1Url,
+                                                            f.image2Url,
+                                                            f.image3Url,
+                                                            (f as any).image1_url,
+                                                            (f as any).image2_url,
+                                                            (f as any).image3_url,
+                                                            (f as any).image1,
+                                                            (f as any).image2,
+                                                            (f as any).image3,
+                                                        ].filter(Boolean) as string[];
+
+                                                        const thumb = imageUrls[0] || fallbackImages[0];
+
+                                                        return thumb ? (
+                                                            <img
+                                                                src={normalizeDriveImageUrl(thumb)}
+                                                                alt={String(f.name ?? "施設画像")}
+                                                                onError={(e) => {
+                                                                    e.currentTarget.src = "/akimikke-logo.png";
+                                                                    e.currentTarget.style.objectFit = "contain";
+                                                                    e.currentTarget.style.padding = "48px";
+                                                                    e.currentTarget.style.background = "#f8fafc";
+                                                                }}
+                                                                style={{
+                                                                    display: "block",
+                                                                    width: "100%",
+                                                                    height: "100%",
+                                                                    minHeight: 150,
+                                                                    objectFit: "contain",
+                                                                    background: "#f8fafc",
+                                                                }}
+                                                            />
+                                                        ) : (
                                                             <div
                                                                 style={{
-                                                                    display: "inline-flex",
-                                                                    marginBottom: 8,
-                                                                    padding: "5px 10px",
-                                                                    borderRadius: 999,
-                                                                    background: "#eef2ff",
-                                                                    color: "#3730a3",
-                                                                    border: "1px solid #c7d2fe",
-                                                                    fontSize: 11,
-                                                                    fontWeight: 800,
+                                                                    width: "100%",
+                                                                    height: "100%",
+                                                                    minHeight: 150,
+                                                                    display: "flex",
+                                                                    alignItems: "center",
+                                                                    justifyContent: "center",
+                                                                    background: "#f8fafc",
                                                                 }}
                                                             >
-                                                                {actualServiceLabel}
+                                                                <img
+                                                                    src="/akimikke-logo.png"
+                                                                    alt="AkiMikke"
+                                                                    style={{
+                                                                        width: 96,
+                                                                        height: 96,
+                                                                        objectFit: "contain",
+                                                                        background: "#f8fafc",
+                                                                        opacity: 0.75,
+                                                                    }}
+                                                                />
                                                             </div>
-                                                            {f.informationSource === "wamnet" && (
-                                                                <span
+                                                        );
+                                                    })()}
+
+                                                    {/* お気に入り */}
+                                                    <div
+                                                        style={{
+                                                            position: "absolute",
+                                                            top: 12,
+                                                            right: 12,
+                                                            background: "rgba(255,255,255,0.95)",
+                                                            borderRadius: 999,
+                                                            padding: 6,
+                                                            boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+                                                        }}
+                                                    >
+                                                        <FavoriteButton facilityId={`${actualServiceKey}:${code}`} />
+                                                    </div>
+                                                </div>
+
+                                                {/* 右：情報 */}
+                                                <div
+                                                    className="facility-card-body"
+                                                    style={{
+                                                        padding: 20,
+                                                        display: "flex",
+                                                        flexDirection: "column",
+                                                        justifyContent: "space-between",
+                                                        minWidth: 0,
+                                                        maxWidth: "100%",
+                                                        overflow: "hidden",
+                                                    }}
+                                                >
+                                                    <div>
+                                                        {/* 上段 */}
+                                                        <div
+                                                            style={{
+                                                                display: "flex",
+                                                                justifyContent: "space-between",
+                                                                gap: 12,
+                                                                alignItems: "flex-start",
+                                                                flexWrap: "wrap",
+                                                            }}
+                                                        >
+                                                            <div style={{ flex: 1, minWidth: 0 }}>
+                                                                <div
                                                                     style={{
                                                                         display: "inline-flex",
-                                                                        marginLeft: 6,
                                                                         marginBottom: 8,
                                                                         padding: "5px 10px",
                                                                         borderRadius: 999,
-                                                                        background: "#f3f4f6",
-                                                                        color: "#4b5563",
-                                                                        border: "1px solid #d1d5db",
+                                                                        background: "#eef2ff",
+                                                                        color: "#3730a3",
+                                                                        border: "1px solid #c7d2fe",
                                                                         fontSize: 11,
-                                                                        fontWeight: 700,
+                                                                        fontWeight: 800,
                                                                     }}
                                                                 >
-                                                                    オープンデータ掲載
-                                                                </span>
-                                                            )}
-                                                            <div
-                                                                style={{
-                                                                    fontSize: 18,
-                                                                    whiteSpace: "nowrap",
-                                                                    overflow: "hidden",
-                                                                    textOverflow: "ellipsis",
-                                                                    fontWeight: 800,
-                                                                    color: "#111827",
-                                                                    lineHeight: 1.2,
-                                                                }}
-                                                            >
-                                                                {f.name || "名称未設定"}
-                                                            </div>
+                                                                    {actualServiceLabel}
+                                                                </div>
+                                                                {f.informationSource === "wamnet" && (
+                                                                    <span
+                                                                        style={{
+                                                                            display: "inline-flex",
+                                                                            marginLeft: 6,
+                                                                            marginBottom: 8,
+                                                                            padding: "5px 10px",
+                                                                            borderRadius: 999,
+                                                                            background: "#f3f4f6",
+                                                                            color: "#4b5563",
+                                                                            border: "1px solid #d1d5db",
+                                                                            fontSize: 11,
+                                                                            fontWeight: 700,
+                                                                        }}
+                                                                    >
+                                                                        オープンデータ掲載
+                                                                    </span>
+                                                                )}
 
-                                                            <div
-                                                                style={{
-                                                                    marginTop: 4,
-                                                                    color: "#4b5563",
-                                                                    fontSize: 13,
-                                                                    whiteSpace: "nowrap",
-                                                                    overflow: "hidden",
-                                                                    textOverflow: "ellipsis",
-                                                                }}
-                                                            >
-                                                                {f.address ?? ""}
-                                                            </div>
-                                                        </div>
+                                                                {f.conditionStatus === "unknown" && (
+                                                                    <span
+                                                                        style={{
+                                                                            display: "inline-flex",
+                                                                            marginLeft: 6,
+                                                                            marginBottom: 8,
+                                                                            padding: "5px 10px",
+                                                                            borderRadius: 999,
+                                                                            background: "#fff7ed",
+                                                                            color: "#9a3412",
+                                                                            border: "1px solid #fed7aa",
+                                                                            fontSize: 11,
+                                                                            fontWeight: 700,
+                                                                        }}
+                                                                    >
+                                                                        条件未確認
+                                                                    </span>
+                                                                )}
 
-                                                        {/* 空き */}
-                                                        <div>
-                                                            {serviceKey === "tk" ? (
-                                                                <span
-                                                                    style={vacantBadgeStyle(
-                                                                        f.acceptTk === "できる" ? "あり" : "不明"
-                                                                    )}
+                                                                <div
+                                                                    style={{
+                                                                        fontSize: 18,
+                                                                        whiteSpace: "nowrap",
+                                                                        overflow: "hidden",
+                                                                        textOverflow: "ellipsis",
+                                                                        fontWeight: 800,
+                                                                        color: "#111827",
+                                                                        lineHeight: 1.2,
+                                                                    }}
                                                                 >
-                                                                    新規受入：{f.acceptTk ?? "不明"}
-                                                                </span>
-                                                            ) : (
-                                                                <span style={vacantBadgeStyle(f.vacant)}>
-                                                                    空き：{f.vacant ?? "不明"}
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                    </div>
+                                                                    {f.name || "名称未設定"}
+                                                                </div>
 
-                                                    {f.informationSource === "wamnet" && (
+                                                                <div
+                                                                    style={{
+                                                                        marginTop: 4,
+                                                                        color: "#4b5563",
+                                                                        fontSize: 13,
+                                                                        whiteSpace: "nowrap",
+                                                                        overflow: "hidden",
+                                                                        textOverflow: "ellipsis",
+                                                                    }}
+                                                                >
+                                                                    {f.address ?? ""}
+                                                                </div>
+                                                            </div>
+
+                                                            {/* 空き */}
+                                                            <div>
+                                                                {serviceKey === "tk" ? (
+                                                                    <span
+                                                                        style={vacantBadgeStyle(
+                                                                            f.acceptTk === "できる" ? "あり" : "不明"
+                                                                        )}
+                                                                    >
+                                                                        新規受入：{f.acceptTk ?? "不明"}
+                                                                    </span>
+                                                                ) : (
+                                                                    <span style={vacantBadgeStyle(f.vacant)}>
+                                                                        空き：{f.vacant ?? "不明"}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </div>
+
+                                                        {f.informationSource === "wamnet" && (
+                                                            <div
+                                                                style={{
+                                                                    marginTop: 12,
+                                                                    color: "#64748b",
+                                                                    fontSize: 12,
+                                                                    lineHeight: 1.7,
+                                                                }}
+                                                            >
+                                                                公的なオープンデータをもとに掲載しています。
+                                                                空き状況・サービスの詳細は施設へ直接お問い合わせください。
+                                                            </div>
+                                                        )}
+
+                                                        {/* タグ */}
                                                         <div
                                                             style={{
-                                                                marginTop: 12,
-                                                                color: "#64748b",
-                                                                fontSize: 12,
-                                                                lineHeight: 1.7,
+                                                                marginTop: 16,
+                                                                display: "flex",
+                                                                flexWrap: "wrap",
+                                                                gap: 8,
                                                             }}
                                                         >
-                                                            公的なオープンデータをもとに掲載しています。
-                                                            空き状況・サービスの詳細は施設へ直接お問い合わせください。
+                                                            {renderServiceBadges(
+                                                                actualServiceKey,
+                                                                f,
+                                                                f.conditionStatus === "unknown"
+                                                                    ? []
+                                                                    : selectedDisability
+                                                            ).map((badge) => (
+                                                                <span
+                                                                    key={`${badge.label}:${badge.value}`}
+                                                                    style={
+                                                                        badge.highlight
+                                                                            ? {
+                                                                                display: "inline-flex",
+                                                                                alignItems: "center",
+                                                                                padding: "3px 7px",
+                                                                                borderRadius: 999,
+                                                                                background: "#f0fdf4",
+                                                                                color: "#166534",
+                                                                                border: "1px solid #86efac",
+                                                                                fontWeight: 800,
+                                                                                fontSize: 11,
+                                                                            }
+                                                                            : optionBadgeStyle(badge.value)
+                                                                    }
+                                                                >
+                                                                    {badge.label} {badge.value}
+                                                                </span>
+                                                            ))}
                                                         </div>
-                                                    )}
+                                                    </div>
 
-                                                    {/* タグ */}
+                                                    {/* 下段 */}
                                                     <div
+                                                        className="facility-card-bottom"
                                                         style={{
-                                                            marginTop: 16,
+                                                            marginTop: 20,
                                                             display: "flex",
-                                                            flexWrap: "wrap",
-                                                            gap: 8,
-                                                        }}
-                                                    >
-                                                        {renderServiceBadges(actualServiceKey, f, selectedDisability).map((badge) => (
-                                                            <span
-                                                                key={`${badge.label}:${badge.value}`}
-                                                                style={
-                                                                    badge.highlight
-                                                                        ? {
-                                                                            display: "inline-flex",
-                                                                            alignItems: "center",
-                                                                            padding: "3px 7px",
-                                                                            borderRadius: 999,
-                                                                            background: "#f0fdf4",
-                                                                            color: "#166534",
-                                                                            border: "1px solid #86efac",
-                                                                            fontWeight: 800,
-                                                                            fontSize: 11,
-                                                                        }
-                                                                        : optionBadgeStyle(badge.value)
-                                                                }
-                                                            >
-                                                                {badge.label} {badge.value}
-                                                            </span>
-                                                        ))}
-                                                    </div>
-                                                </div>
-
-                                                {/* 下段 */}
-                                                <div
-                                                    className="facility-card-bottom"
-                                                    style={{
-                                                        marginTop: 20,
-                                                        display: "flex",
-                                                        justifyContent: "space-between",
-                                                        alignItems: "center",
-                                                        gap: 12,
-                                                        flexWrap: "wrap",
-                                                        minWidth: 0,
-                                                    }}
-                                                >
-
-                                                    <div
-                                                        style={{
-                                                            color: "#6b7280",
-                                                            fontSize: 12,
-                                                        }}
-                                                    >
-                                                        更新：{updatedDateText || "未登録"}
-                                                    </div>
-
-                                                    <div
-                                                        className="facility-detail-button"
-                                                        style={{
-                                                            display: "inline-flex",
+                                                            justifyContent: "space-between",
                                                             alignItems: "center",
-                                                            justifyContent: "center",
-                                                            padding: "12px 18px",
-                                                            borderRadius: 12,
-                                                            background: "#2563eb",
-                                                            color: "#fff",
-                                                            fontWeight: 800,
-                                                            fontSize: 14,
-                                                            boxSizing: "border-box",
+                                                            gap: 12,
+                                                            flexWrap: "wrap",
+                                                            minWidth: 0,
                                                         }}
                                                     >
-                                                        詳細を見る →
+
+                                                        <div
+                                                            style={{
+                                                                color: "#6b7280",
+                                                                fontSize: 12,
+                                                            }}
+                                                        >
+                                                            更新：{updatedDateText || "未登録"}
+                                                        </div>
+
+                                                        <div
+                                                            className="facility-detail-button"
+                                                            style={{
+                                                                display: "inline-flex",
+                                                                alignItems: "center",
+                                                                justifyContent: "center",
+                                                                padding: "12px 18px",
+                                                                borderRadius: 12,
+                                                                background: "#2563eb",
+                                                                color: "#fff",
+                                                                fontWeight: 800,
+                                                                fontSize: 14,
+                                                                boxSizing: "border-box",
+                                                            }}
+                                                        >
+                                                            詳細を見る →
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </Link>
+                                    </Link>
+                                </div>
                             );
                         })}
                     </div>
 
-                    {totalPages > 1 ? (
-                        <div
-                            style={{
-                                marginTop: 22,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                gap: 8,
-                                flexWrap: "wrap",
-                            }}
-                        >
-                            {page > 1 ? (
-                                <Link href={buildPageHref(page - 1)} style={pageButtonStyle(false)}>
-                                    ← 前へ
-                                </Link>
-                            ) : (
-                                <span
-                                    style={{
-                                        ...pageButtonStyle(false),
-                                        opacity: 0.45,
-                                        pointerEvents: "none",
-                                    }}
-                                >
-                                    ← 前へ
-                                </span>
-                            )}
-
-                            {pageNumbers.map((n, index) =>
-                                n === -1 ? (
-                                    <span key={`ellipsis-${index}`} style={{ padding: "0 6px", color: "#6b7280" }}>
-                                        …
-                                    </span>
-                                ) : (
-                                    <Link
-                                        key={n}
-                                        href={buildPageHref(n)}
-                                        style={pageButtonStyle(page === n)}
-                                    >
-                                        {n}
+                    {
+                        totalPages > 1 ? (
+                            <div
+                                style={{
+                                    marginTop: 22,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    gap: 8,
+                                    flexWrap: "wrap",
+                                }}
+                            >
+                                {page > 1 ? (
+                                    <Link href={buildPageHref(page - 1)} style={pageButtonStyle(false)}>
+                                        ← 前へ
                                     </Link>
-                                )
-                            )}
+                                ) : (
+                                    <span
+                                        style={{
+                                            ...pageButtonStyle(false),
+                                            opacity: 0.45,
+                                            pointerEvents: "none",
+                                        }}
+                                    >
+                                        ← 前へ
+                                    </span>
+                                )}
 
-                            {page < totalPages ? (
-                                <Link href={buildPageHref(page + 1)} style={pageButtonStyle(false)}>
-                                    次へ →
-                                </Link>
-                            ) : (
-                                <span
-                                    style={{
-                                        ...pageButtonStyle(false),
-                                        opacity: 0.45,
-                                        pointerEvents: "none",
-                                    }}
-                                >
-                                    次へ →
-                                </span>
-                            )}
-                        </div>
-                    ) : null}
+                                {pageNumbers.map((n, index) =>
+                                    n === -1 ? (
+                                        <span key={`ellipsis-${index}`} style={{ padding: "0 6px", color: "#6b7280" }}>
+                                            …
+                                        </span>
+                                    ) : (
+                                        <Link
+                                            key={n}
+                                            href={buildPageHref(n)}
+                                            style={pageButtonStyle(page === n)}
+                                        >
+                                            {n}
+                                        </Link>
+                                    )
+                                )}
+
+                                {page < totalPages ? (
+                                    <Link href={buildPageHref(page + 1)} style={pageButtonStyle(false)}>
+                                        次へ →
+                                    </Link>
+                                ) : (
+                                    <span
+                                        style={{
+                                            ...pageButtonStyle(false),
+                                            opacity: 0.45,
+                                            pointerEvents: "none",
+                                        }}
+                                    >
+                                        次へ →
+                                    </span>
+                                )}
+                            </div>
+                        ) : null
+                    }
                 </>
             )}
         </>

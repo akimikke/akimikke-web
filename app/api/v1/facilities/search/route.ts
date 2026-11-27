@@ -548,7 +548,7 @@ export async function GET(req: Request) {
 
       informationSource:
         norm(getAny(f, "vacantDetail", "vacant_detail")) ===
-        "WAMNET掲載情報・空き状況未確認"
+          "WAMNET掲載情報・空き状況未確認"
           ? "wamnet"
           : "unknown",
 
@@ -639,11 +639,6 @@ export async function GET(req: Request) {
       filtered = filtered.filter((f: any) => norm(f.region) === city);
     }
 
-    // 空きありのみ
-    if (onlyVacant && service !== "tk") {
-      filtered = filtered.filter((f: any) => norm(f.vacant) === "あり");
-    }
-
     // フリーワード
     if (q) {
       const qTokens = q
@@ -665,65 +660,171 @@ export async function GET(req: Request) {
       });
     }
 
-    // 障害種別フィルター
-    if (disabilitySelected.length > 0) {
-      filtered = filtered.filter((f: any) => {
-        const tags = getDisabilityTags(f);
 
-        if (disabilityMatch === "AND") {
-          return disabilitySelected.every((d) => tags.includes(d));
-        }
+    // ===== 詳細条件の3段階判定 =====
 
-        return disabilitySelected.some((d) => tags.includes(d));
-      });
+    type ConditionResult = "matched" | "unknown" | "excluded";
+
+    const unknownValues = new Set([
+      "",
+      "不明",
+      "未確認",
+      "未登録",
+      "要確認",
+      "情報なし",
+      "未設定",
+      "null",
+      "undefined",
+      "-",
+      "－",
+    ]);
+
+    function isUnknownValue(value: any): boolean {
+      return unknownValues.has(norm(value).toLowerCase());
     }
 
-    // ===== 追加条件 f_ フィルター（GASモード）=====
-    for (const [key, selected] of Object.entries(dynFilters)) {
-      if (!selected?.length) continue;
+    // 詳細条件と施設情報の対応関係
+    const detailFieldMap: Record<string, string[]> = {
+      shuttle: ["shuttle"],
+      bath: ["bath", "bathing"],
+      daysupport: ["daysupport", "daySupport", "day_support"],
+      facility: ["facility"],
+      room: ["room"],
+      sex: ["sex"],
+      type: ["type", "abType", "ab_type"],
+      failure_hd: ["failureHd", "failure_hd"],
+      medical_care: ["medicalCareHd", "medicalCare", "medical_care"],
+      failurejh: ["failureJh", "failureJH"],
+      medicalcare: ["medicalCareJh", "medicalCare", "medicalcare"],
+      failuresss: ["failureSss", "failuresss"],
+      disabilitiessn: ["disabilitiesSn", "disabilitiesSN"],
+      failurejn: ["failureJn", "failureJN"],
+      targetstk: ["targetsTk", "targetstk"],
+      accepttk: ["acceptTk", "accepttk"],
+    };
 
-      filtered = filtered.filter((f: any) => {
-        let value = "";
+    const hasDetailFilters =
+      onlyVacant ||
+      disabilitySelected.length > 0 ||
+      Object.keys(dynFilters).length > 0;
 
-        if (key === "shuttle") {
-          value = norm(f.shuttle);
-        } else if (key === "bath") {
-          value = norm(f.bath || f.bathing);
-        } else if (key === "daysupport") {
-          value = norm(f.daysupport || f.daySupport || f.day_support);
-        } else if (key === "facility") {
-          value = norm(f.facility);
-        } else if (key === "room") {
-          value = norm(f.room);
-        } else if (key === "sex") {
-          value = norm(f.sex);
-        } else if (key === "type") {
-          value = norm(f.type);
-        } else if (key === "failure_hd") {
-          value = norm(f.failureHd);
-        } else if (key === "medical_care") {
-          value = norm(f.medicalCareHd);
-        } else if (key === "failurejh") {
-          value = norm(f.failureJh);
-        } else if (key === "medicalcare") {
-          value = norm(f.medicalCareJh);
-        } else if (key === "failuresss") {
-          value = norm(f.failureSss);
-        } else if (key === "disabilitiessn") {
-          value = norm(f.disabilitiesSn);
-        } else if (key === "failurejn") {
-          value = norm(f.failureJn);
-        } else if (key === "targetstk") {
-          value = norm(f.targetsTk);
-        } else if (key === "accepttk") {
-          value = norm(f.acceptTk);
+    function classifyFacility(f: any): ConditionResult {
+      let hasUnknown = false;
+
+      // 空き状況・新規受入
+      if (onlyVacant) {
+        const value =
+          service === "tk" ||
+            norm(f.serviceKey).toLowerCase() === "tk"
+            ? getAny(f, "acceptTk", "accepttk")
+            : f.vacant;
+
+        const expected =
+          service === "tk" ||
+            norm(f.serviceKey).toLowerCase() === "tk"
+            ? "できる"
+            : "あり";
+
+        if (isUnknownValue(value)) {
+          hasUnknown = true;
+        } else if (norm(value) !== expected) {
+          return "excluded";
+        }
+      }
+
+      // 障害種別
+      if (disabilitySelected.length > 0) {
+        const rawTags = getDisabilityTags(f);
+        const tags = rawTags.filter(
+          (tag) => !isUnknownValue(tag)
+        );
+
+        if (tags.length === 0) {
+          hasUnknown = true;
+        } else {
+          const matched =
+            disabilityMatch === "AND"
+              ? disabilitySelected.every(
+                (d) => tags.includes(d)
+              )
+              : disabilitySelected.some(
+                (d) => tags.includes(d)
+              );
+
+          if (!matched) {
+            if (rawTags.some(isUnknownValue)) {
+              hasUnknown = true;
+            } else {
+              return "excluded";
+            }
+          }
+        }
+      }
+
+      // サービス別の詳細条件
+      for (const [key, selected] of Object.entries(dynFilters)) {
+        if (!selected.length) continue;
+
+        const fields = detailFieldMap[key];
+
+        if (!fields) {
+          return "excluded";
         }
 
-        if (!value) return false;
+        const value = getAny(f, ...fields);
 
-        return selected.some((v) => value.includes(v));
-      });
+        if (isUnknownValue(value)) {
+          hasUnknown = true;
+          continue;
+        }
+
+        const rawValues = splitTags(value);
+        const actualValues = rawValues.filter(
+          (v) => !isUnknownValue(v)
+        );
+
+        const matched = selected.some(
+          (v) => actualValues.includes(norm(v))
+        );
+
+        if (!matched) {
+          if (
+            actualValues.length === 0 ||
+            rawValues.some(isUnknownValue)
+          ) {
+            hasUnknown = true;
+          } else {
+            return "excluded";
+          }
+        }
+      }
+
+      return hasUnknown ? "unknown" : "matched";
     }
+
+    // 一致施設と未確認施設を分離
+    const matchedFacilities: any[] = [];
+    const unknownFacilities: any[] = [];
+
+    for (const f of filtered) {
+      const result = classifyFacility(f);
+
+      if (result === "matched") {
+        matchedFacilities.push({
+          ...f,
+          conditionStatus: "matched",
+        });
+      } else if (result === "unknown") {
+        unknownFacilities.push({
+          ...f,
+          conditionStatus: "unknown",
+        });
+      }
+    }
+
+    // 既存画面との互換性を維持
+    filtered = matchedFacilities;
+
 
     // GAS側も同様にUTF-8固定で返す
     return jsonUtf8({
@@ -736,6 +837,13 @@ export async function GET(req: Request) {
       count: filtered.length,
       order: "updated_desc",
       facilities: filtered,
+
+      // 条件一致・条件未確認の検索結果
+      hasDetailFilters,
+      matchedCount: matchedFacilities.length,
+      unknownCount: unknownFacilities.length,
+      unknownFacilities,
+
       facets: {},
       debug: { mode: "gas", upstreams, prefecture, city, onlyVacant, q },
     });

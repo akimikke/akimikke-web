@@ -242,64 +242,64 @@ export default async function Page({
   const areaPrefRaw = Array.isArray(sp.area_pref) ? sp.area_pref[0] : sp.area_pref;
   const qRaw = Array.isArray(sp.q) ? sp.q[0] : sp.q;
   const orderRaw = Array.isArray(sp.order) ? sp.order[0] : sp.order;
-  const shuttleRaw = Array.isArray(sp.f_shuttle) ? sp.f_shuttle[0] : sp.f_shuttle;
-  const bathRaw = Array.isArray(sp.f_bath) ? sp.f_bath[0] : sp.f_bath;
-  const daysupportRaw = Array.isArray(sp.f_daysupport) ? sp.f_daysupport[0] : sp.f_daysupport;
+  const shuttleRaw = Array.isArray(sp.f_shuttle) ? sp.f_shuttle.join(",") : sp.f_shuttle;
+  const bathRaw = Array.isArray(sp.f_bath) ? sp.f_bath.join(",") : sp.f_bath;
+  const daysupportRaw = Array.isArray(sp.f_daysupport) ? sp.f_daysupport.join(",") : sp.f_daysupport;
 
-  const ghFacilityRaw = Array.isArray(sp.f_facility) ? sp.f_facility[0] : sp.f_facility;
-  const ghRoomRaw = Array.isArray(sp.f_room) ? sp.f_room[0] : sp.f_room;
-  const ghSexRaw = Array.isArray(sp.f_sex) ? sp.f_sex[0] : sp.f_sex;
+  const ghFacilityRaw = Array.isArray(sp.f_facility) ? sp.f_facility.join(",") : sp.f_facility;
+  const ghRoomRaw = Array.isArray(sp.f_room) ? sp.f_room.join(",") : sp.f_room;
+  const ghSexRaw = Array.isArray(sp.f_sex) ? sp.f_sex.join(",") : sp.f_sex;
 
   const ghFacilityCsv = String(ghFacilityRaw ?? "");
   const ghRoomCsv = String(ghRoomRaw ?? "");
   const ghSexCsv = String(ghSexRaw ?? "");
 
-  const abTypeRaw = Array.isArray(sp.f_type) ? sp.f_type[0] : sp.f_type;
-  const abShuttleRaw = Array.isArray(sp.f_shuttle) ? sp.f_shuttle[0] : sp.f_shuttle;
+  const abTypeRaw = Array.isArray(sp.f_type) ? sp.f_type.join(",") : sp.f_type;
+  const abShuttleRaw = Array.isArray(sp.f_shuttle) ? sp.f_shuttle.join(",") : sp.f_shuttle;
 
   const abTypeCsv = String(abTypeRaw ?? "");
   const abShuttleCsv = String(abShuttleRaw ?? "");
 
-  const hdFailureRaw = Array.isArray(sp.f_failure_hd) ? sp.f_failure_hd[0] : sp.f_failure_hd;
-  const hdMedicalCareRaw = Array.isArray(sp.f_medical_care) ? sp.f_medical_care[0] : sp.f_medical_care;
-  const hdDaySupportRaw = Array.isArray(sp.f_daysupport) ? sp.f_daysupport[0] : sp.f_daysupport;
-  const hdShuttleRaw = Array.isArray(sp.f_shuttle) ? sp.f_shuttle[0] : sp.f_shuttle;
+  const hdFailureRaw = Array.isArray(sp.f_failure_hd) ? sp.f_failure_hd.join(",") : sp.f_failure_hd;
+  const hdMedicalCareRaw = Array.isArray(sp.f_medical_care) ? sp.f_medical_care.join(",") : sp.f_medical_care;
+  const hdDaySupportRaw = Array.isArray(sp.f_daysupport) ? sp.f_daysupport.join(",") : sp.f_daysupport;
+  const hdShuttleRaw = Array.isArray(sp.f_shuttle) ? sp.f_shuttle.join(",") : sp.f_shuttle;
 
   const hdFailureCsv = String(hdFailureRaw ?? "");
   const hdMedicalCareCsv = String(hdMedicalCareRaw ?? "");
   const hdDaySupportCsv = String(hdDaySupportRaw ?? "");
   const hdShuttleCsv = String(hdShuttleRaw ?? "");
 
-  const jhFailureRaw = Array.isArray(sp.f_failurejh) ? sp.f_failurejh[0] : sp.f_failurejh;
-  const jhMedicalCareRaw = Array.isArray(sp.f_medicalcare) ? sp.f_medicalcare[0] : sp.f_medicalcare;
-  const jhShuttleRaw = Array.isArray(sp.f_shuttle) ? sp.f_shuttle[0] : sp.f_shuttle;
+  const jhFailureRaw = Array.isArray(sp.f_failurejh) ? sp.f_failurejh.join(",") : sp.f_failurejh;
+  const jhMedicalCareRaw = Array.isArray(sp.f_medicalcare) ? sp.f_medicalcare.join(",") : sp.f_medicalcare;
+  const jhShuttleRaw = Array.isArray(sp.f_shuttle) ? sp.f_shuttle.join(",") : sp.f_shuttle;
 
   const jhFailureCsv = String(jhFailureRaw ?? "");
   const jhMedicalCareCsv = String(jhMedicalCareRaw ?? "");
   const jhShuttleCsv = String(jhShuttleRaw ?? "");
 
-  const ssFailureRaw = Array.isArray(sp.f_failuresss) ? sp.f_failuresss[0] : sp.f_failuresss;
-  const ssDaySupportRaw = Array.isArray(sp.f_daysupport) ? sp.f_daysupport[0] : sp.f_daysupport;
-  const ssSexRaw = Array.isArray(sp.f_sex) ? sp.f_sex[0] : sp.f_sex;
+  const ssFailureRaw = Array.isArray(sp.f_failuresss) ? sp.f_failuresss.join(",") : sp.f_failuresss;
+  const ssDaySupportRaw = Array.isArray(sp.f_daysupport) ? sp.f_daysupport.join(",") : sp.f_daysupport;
+  const ssSexRaw = Array.isArray(sp.f_sex) ? sp.f_sex.join(",") : sp.f_sex;
 
   const ssFailureCsv = String(ssFailureRaw ?? "");
   const ssDaySupportCsv = String(ssDaySupportRaw ?? "");
   const ssSexCsv = String(ssSexRaw ?? "");
 
-  const snDisabilitiesRaw = Array.isArray(sp.f_disabilitiessn) ? sp.f_disabilitiessn[0] : sp.f_disabilitiessn;
-  const snShuttleRaw = Array.isArray(sp.f_shuttle) ? sp.f_shuttle[0] : sp.f_shuttle;
+  const snDisabilitiesRaw = Array.isArray(sp.f_disabilitiessn) ? sp.f_disabilitiessn.join(",") : sp.f_disabilitiessn;
+  const snShuttleRaw = Array.isArray(sp.f_shuttle) ? sp.f_shuttle.join(",") : sp.f_shuttle;
 
   const snDisabilitiesCsv = String(snDisabilitiesRaw ?? "");
   const snShuttleCsv = String(snShuttleRaw ?? "");
 
-  const jnFacilityTypeRaw = Array.isArray(sp.f_failurejn) ? sp.f_failurejn[0] : sp.f_failurejn;
-  const jnShuttleRaw = Array.isArray(sp.f_shuttle) ? sp.f_shuttle[0] : sp.f_shuttle;
+  const jnFacilityTypeRaw = Array.isArray(sp.f_failurejn) ? sp.f_failurejn.join(",") : sp.f_failurejn;
+  const jnShuttleRaw = Array.isArray(sp.f_shuttle) ? sp.f_shuttle.join(",") : sp.f_shuttle;
 
   const jnFacilityTypeCsv = String(jnFacilityTypeRaw ?? "");
   const jnShuttleCsv = String(jnShuttleRaw ?? "");
 
-  const tkTargetsRaw = Array.isArray(sp.f_targetstk) ? sp.f_targetstk[0] : sp.f_targetstk;
-  const tkAcceptRaw = Array.isArray(sp.f_accepttk) ? sp.f_accepttk[0] : sp.f_accepttk;
+  const tkTargetsRaw = Array.isArray(sp.f_targetstk) ? sp.f_targetstk.join(",") : sp.f_targetstk;
+  const tkAcceptRaw = Array.isArray(sp.f_accepttk) ? sp.f_accepttk.join(",") : sp.f_accepttk;
 
   const tkTargetsCsv = String(tkTargetsRaw ?? "");
   const tkAcceptCsv = String(tkAcceptRaw ?? "");
@@ -329,8 +329,13 @@ export default async function Page({
   }
 
   for (const [k, v] of Object.entries(sp)) {
-    const value = Array.isArray(v) ? v[0] : v;
-    if (value && String(value).trim()) qs.set(k, String(value).trim());
+    const values = Array.isArray(v) ? v : [v];
+
+    for (const value of values) {
+      if (value && String(value).trim()) {
+        qs.append(k, String(value).trim());
+      }
+    }
   }
 
   const apiPath = `/api/v1/facilities/search?${qs.toString()}`;
